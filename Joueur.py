@@ -6,7 +6,7 @@ class Joueur:
     def __init__(self, nom, identifiant) :
         self.nom = nom
         self.identifiant = identifiant
-        self.position = 0
+        self.position = 1
 
 
     def lancer_de_des(self) -> int:

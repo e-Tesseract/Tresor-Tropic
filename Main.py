@@ -19,6 +19,9 @@ while all(joueur.position < 31 for joueur in joueurs):
     # Tant que les joueurs ne sont pas sur la case 31, continuez le jeu
     print("---------------------- TOUR ----------------------")
 
+    # afficher le plateau
+    plateau.afficher_plateau()
+
     # Affichez les informations des joueurs
     for joueur in joueurs:
         joueur.afficher_info()
@@ -43,12 +46,13 @@ while all(joueur.position < 31 for joueur in joueurs):
         for i in range(len(joueurs)):
             for j in range(i + 1, len(joueurs)):
                 if joueurs[i].position == joueurs[j].position:
-                    print(f"\nCombat entre {joueurs[i].nom} et {joueurs[j].nom}")
+                    if joueur.position == 1:
+                        continue
                     gagnant = plateau.combat_joueurs(joueurs[i], joueurs[j])
                     perdant = joueurs[j] if gagnant == joueurs[i] else joueurs[i] 
                     plateau.deplacer_joueur(perdant, perdant.position, -1)
-                    for joueur in joueurs:
-                        plateau.mettre_a_jour_joueurs_sur_case(joueur, joueur.position)
+            for joueur in joueurs:
+                plateau.mettre_a_jour_joueurs_sur_case(joueur, joueur.position)
 
 
 
