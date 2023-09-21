@@ -19,18 +19,18 @@ class Plateau:
 
         # Ajout des cases spéciales
         # Case 6
-        self.cases[5]["description"] = "\033[91mMonstre\033[0m"
+        self.cases[5]["description"] = "Monstre" 
         # Case 25
-        self.cases[24]["description"] = "\033[91mMonstre\033[0m"
+        self.cases[24]["description"] = "Monstre"
         # Case 30
-        self.cases[29]["description"] = "\033[91mMonstre\033[0m"
+        self.cases[29]["description"] = "Monstre"
 
         # Case 5
-        self.cases[4]["description"] = "\033[92mEchelle -> Case 2\033[0m"
+        self.cases[4]["description"] = "\033[92mEchelle\033[0m"
         # Case 8
-        self.cases[7]["description"] = "\033[92mEchelle -> Case 12\033[0m"
+        self.cases[7]["description"] = "\033[92mEchelle\033[0m"
         # Case 29
-        self.cases[28]["description"] = "\033[92mEchelle -> Case 21\033[0m"
+        self.cases[28]["description"] = "\033[92mEchelle\033[0m"
 
         for joueur in joueurs:
             self.cases[joueur.position - 1]["joueurs_sur_case"].append(joueur)
@@ -46,7 +46,7 @@ class Plateau:
         return joueur.position == numero_case
     
     
-    def deplacer_joueur(self, joueur, distance) -> None:
+    def deplacer_joueur(self, joueur, ancienne_position,  distance) -> None:
         """Déplace le joueur sur le plateau.
         param joueur: le joueur à déplacer
         param distance: la distance à parcourir"""
@@ -56,18 +56,21 @@ class Plateau:
 
         # Vérifie si le déplacement est valide
         if distance is not None:
-            joueur.position += distance
 
+            joueur.position += distance
             # Echelles pour monter ou descendre de plusieurs cases à la fois sur le plateau
             if joueur.position == 5:
-                print("Le joueur est sur la case 5, il avance case 10.")
-                joueur.position = 10
+                print("Le joueur est sur la case 5, il recule case 2.")
+                joueur.position = 2
             elif joueur.position == 8:
                 print("Le joueur est sur la case 8, il avance case 12.")
                 joueur.position = 12
             elif joueur.position == 29:
-                print("Le joueur est sur la case 29, il avance case 21.")
+                print("Le joueur est sur la case 29, il recule case 21.")
                 joueur.position = 21
+
+
+            
 
 
 
@@ -92,32 +95,33 @@ class Plateau:
 
     
     def combat_joueurs(self, joueur1, joueur2) -> Joueur:
-        # Méthode pour simuler un combat entre deux joueurs
-
+        # Fonction pour simuler un combat entre deux joueurs
         gagnant = None
 
-        # Méthode pour simuler un combat entre deux joueurs
-        de1_joueur1 = joueur1.lancer_de_des()
-        de2_joueur1 = joueur1.lancer_de_des()
-        de1_joueur2 = joueur2.lancer_de_des()
-        de2_joueur2 = joueur2.lancer_de_des()
+        while gagnant is None:
+            # Méthode pour simuler un combat entre deux joueurs
+            de1_joueur1 = joueur1.lancer_de_des()
+            de2_joueur1 = joueur1.lancer_de_des()
+            de1_joueur2 = joueur2.lancer_de_des()
+            de2_joueur2 = joueur2.lancer_de_des()
 
-        resultat_joueur1 = de1_joueur1 + de2_joueur1
-        resultat_joueur2 = de1_joueur2 + de2_joueur2
+            resultat_joueur1 = de1_joueur1 + de2_joueur1
+            resultat_joueur2 = de1_joueur2 + de2_joueur2
 
-        print(f"Combat entre {joueur1.nom} et {joueur2.nom}")
-        print(f"Résultat de {joueur1.nom}: {resultat_joueur1}")
-        print(f"Résultat de {joueur2.nom}: {resultat_joueur2}")
+            print(f"Combat entre {joueur1.nom} et {joueur2.nom}")
+            print(f"Résultat de {joueur1.nom}: {resultat_joueur1}")
+            print(f"Résultat de {joueur2.nom}: {resultat_joueur2}")
 
-        if resultat_joueur1 > resultat_joueur2:
-            print(f"{joueur1.nom} a gagné le combat !")
-            gagnant = joueur1
-            
-        elif resultat_joueur1 < resultat_joueur2:
-            print(f"{joueur2.nom} a gagné le combat !")
-            gagnant = joueur2
-        else:
-            print("Égalité !")
+            if resultat_joueur1 > resultat_joueur2:
+                print(f"{joueur1.nom} a gagné le combat !")
+                gagnant = joueur1
+                
+            elif resultat_joueur1 < resultat_joueur2:
+                print(f"{joueur2.nom} a gagné le combat !")
+                gagnant = joueur2
+            else:
+                print("Égalité !")
+                print("Nouveau combat !")
         
         return gagnant
     
@@ -127,27 +131,33 @@ class Plateau:
 
         # Simuler le combat avec le monstre
 
-        de1_monstre = random.randint(1, 6)
-        de2_monstre = random.randint(1, 6)
-        de1_joueur = joueur.lancer_de_des()
-        de2_joueur = joueur.lancer_de_des()
+        Egalite = True
 
-        resultat_monstre = de1_monstre + de2_monstre
-        resultat_joueur = de1_joueur + de2_joueur
+        while Egalite:
 
-        print(f"Combat entre {joueur.nom} et le monstre")
-        print(f"Résultat de {joueur.nom}: {resultat_joueur}")
-        print(f"Résultat du monstre: {resultat_monstre}")
+            de1_monstre = random.randint(1, 6)
+            de2_monstre = random.randint(1, 6)
+            de1_joueur = joueur.lancer_de_des()
+            de2_joueur = joueur.lancer_de_des()
 
-        if resultat_joueur > resultat_monstre:
-            print(f"{joueur.nom} a gagné le combat !")
-            return True
-        elif resultat_joueur < resultat_monstre:
-            print(f"{joueur.nom} a perdu le combat !")
-            return False
-        else:
-            print("Égalité !")
-            return False
+            resultat_monstre = de1_monstre + de2_monstre
+            resultat_joueur = de1_joueur + de2_joueur
+
+            print(f"Combat entre {joueur.nom} et le monstre")
+            print(f"Résultat de {joueur.nom}: {resultat_joueur}")
+            print(f"Résultat du monstre: {resultat_monstre}")
+
+            if resultat_joueur > resultat_monstre:
+                print(f"{joueur.nom} a gagné le combat !")
+                Egalite = False
+                return True
+            elif resultat_joueur < resultat_monstre:
+                print(f"{joueur.nom} a perdu le combat !")
+                Egalite = False
+                return False
+            else:
+                print("Égalité !")
+                print("Nouveau combat !")
 
 
     

@@ -10,7 +10,8 @@ class Joueur:
 
 
     def lancer_de_des(self) -> int:
-        # Simuler un lancer de dés et renvoyer le résultat (par exemple, un nombre entre 1 et 6)
+        '''Fonction pour simuler un lancer de dés et renvoyer le résultat (entre 1 et 6)
+        param: self'''
         resultat = random.randint(1, 6)
         return resultat
 

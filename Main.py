@@ -1,73 +1,64 @@
-from Plateau import Plateau  # Importez la classe Plateau
-from Joueur import Joueur  # Importez la classe Joueur
+from Plateau import Plateau
+from Joueur import Joueur
 
-# Créez les joueurs et associez le plateau
-joueur1 = Joueur("Joueur 1", 1)
-joueur2 = Joueur("Joueur 2", 2)
+# Demandez le nombre de joueurs
+nombre_de_joueurs = int(input("Entrez le nombre de joueurs : "))
+joueurs = []
+
+# Créez les joueurs et ajoutez-les à la liste
+for i in range(1, nombre_de_joueurs + 1):
+    nom = input(f"Nom du joueur {i}: ")
+    joueur = Joueur(nom, i)
+    joueurs.append(joueur)
 
 # Créez le plateau
-plateau = Plateau(joueurs = [joueur1, joueur2])
-
+plateau = Plateau(joueurs=joueurs)
 
 print("---------------------- MAIN ----------------------\n")
-
-
-while joueur1.position < 31 and joueur2.position < 31:
+while all(joueur.position < 31 for joueur in joueurs):
     # Tant que les joueurs ne sont pas sur la case 31, continuez le jeu
-
     print("---------------------- TOUR ----------------------")
 
     # Affichez les informations des joueurs
-    joueur1.afficher_info()
-    joueur2.afficher_info()
+    for joueur in joueurs:
+        joueur.afficher_info()
 
-    # Demandez au joueur de lancer les dés et de choisir un déplacement
-    print("")
-    print("Tour du joueur 1")
-    deplacement = joueur1.choix_deplacement() 
-    ancienne_position = joueur1.position
+    for joueur in joueurs:
+        print(f"\nTour de {joueur.nom}")
+        deplacement = joueur.choix_deplacement()
+        ancienne_position = joueur.position
 
-    # Déplacez le joueur sur le plateau
-    plateau.deplacer_joueur(joueur1, deplacement) 
+        for i in range(ancienne_position, ancienne_position + deplacement):
+            print(plateau.cases[i]["description"])
+            if plateau.cases[i]["description"] == "Monstre":
+                if plateau.combat_monstre(joueur) is False:
+                    print("Case du monstre: ", plateau.cases[i]["numero"])
+                    print("Case à reculer: ", plateau.cases[i]["numero"] - 1)
+                    deplacement = i - ancienne_position
+                    break
 
-    print("")
-    print("Tour du joueur 2")
-    deplacement2 = joueur2.choix_deplacement() 
 
-    # Déplacez le joueur sur le plateau
-    plateau.deplacer_joueur(joueur2, deplacement2)  
+        plateau.deplacer_joueur(joueur, ancienne_position, deplacement)
 
-    # Mettre à jour la liste des joueurs sur la case
-    plateau.mettre_a_jour_joueurs_sur_case(joueur1, joueur1.position)
-    plateau.mettre_a_jour_joueurs_sur_case(joueur2, joueur2.position)
+        for i in range(len(joueurs)):
+            for j in range(i + 1, len(joueurs)):
+                if joueurs[i].position == joueurs[j].position:
+                    print(f"\nCombat entre {joueurs[i].nom} et {joueurs[j].nom}")
+                    gagnant = plateau.combat_joueurs(joueurs[i], joueurs[j])
+                    perdant = joueurs[j] if gagnant == joueurs[i] else joueurs[i] 
+                    plateau.deplacer_joueur(perdant, perdant.position, -1)
+                    for joueur in joueurs:
+                        plateau.mettre_a_jour_joueurs_sur_case(joueur, joueur.position)
 
-    # Si les joueurs sont sur la même case, combat
-    if joueur1.position == joueur2.position:
-        print("")
-        gagnant = plateau.combat_joueurs(joueur1, joueur2)
-        if gagnant == joueur1:
-            plateau.deplacer_joueur(joueur2, -1)
-            plateau.mettre_a_jour_joueurs_sur_case(joueur2, joueur2.position)
-        elif gagnant == joueur2:
-            plateau.deplacer_joueur(joueur1, -1)
-            plateau.mettre_a_jour_joueurs_sur_case(joueur1, joueur1.position)
 
-        
 
-    # Affichez le plateau et les joueurs
-    tour_suivant = input("Appuyez sur Entrée pour continuer...")
-    print("")
-
-    # Affichez le plateau et les joueurs
+    tour_suivant = input("\nAppuyez sur Entrée pour continuer...\n")
     plateau.afficher_plateau()
 
-    print("")
-
-
-if joueur1.position >= 30:
-    print("Le joueur 1 a gagné !")
+gagnants = [joueur for joueur in joueurs if joueur.position >= 30]
+if gagnants:
+    print("Les joueurs gagnants sont :")
+    for gagnant in gagnants:
+        print(f"- {gagnant.nom}")
 else:
-    print("Le joueur 2 a gagné !")
-
-
-
+    print("Aucun joueur n'a atteint la case 31. C'est un match nul.")
