@@ -9,7 +9,7 @@ pygame.init()
 infoObject = pygame.display.Info()
 largeur_ecran, hauteur_ecran = infoObject.current_w, infoObject.current_h
 
-taille_ajustee = 0.9
+taille_ajustee = 1
 # Définir la taille de la fenêtre en pourcentage de la taille de l'écran
 largeur_fenetre, hauteur_fenetre = int(largeur_ecran * taille_ajustee), int(hauteur_ecran * taille_ajustee)
 
@@ -21,59 +21,6 @@ plateau_image = pygame.image.load('Map_AvecTraits2.png')
 
 # Redimensionner l'image du plateau pour qu'elle remplisse la fenêtre
 plateau_image = pygame.transform.scale(plateau_image, (largeur_fenetre, hauteur_fenetre))
-
-
-def choix_deplacement_graphique(screen, largeur_fenetre, hauteur_fenetre) -> int:
-    # Animation de lancer de dés 
-    # Charger les images des faces du dé
-    images_des = [
-        pygame.image.load("./images/Des/dice1.png"),
-        pygame.image.load("./images/Des/dice2.png"),
-        pygame.image.load("./images/Des/dice3.png"),
-        pygame.image.load("./images/Des/dice4.png"),
-        pygame.image.load("./images/Des/dice5.png"),
-        pygame.image.load("./images/Des/dice6.png")
-    ]
-
-    # Boucle pour afficher les images des faces du dé de manière aléatoire
-    for i in range(25):
-        # Afficher une image aléatoire du dé
-        resultat = random.randint(0, 5)
-        image_des = images_des[resultat]
-        image_des = pygame.transform.scale(image_des, (int(image_des.get_width() * 0.8), int(image_des.get_height() * 0.8)))
-        screen.blit(image_des, (largeur_fenetre / 2 - image_des.get_width() / 2, hauteur_fenetre / 2 - image_des.get_height() / 2))
-        pygame.display.update()
-
-        # Attendre un court instant avant d'afficher la prochaine image
-        pygame.time.wait(75)
-
-    # Afficher une image aléatoire du dé 
-    image_des = images_des[resultat]
-    image_des = pygame.transform.scale(image_des, (int(image_des.get_width() * 0.8), int(image_des.get_height() * 0.8)))
-
-    # Afficher l'image du dé
-    screen.blit(image_des, (largeur_fenetre / 2 - image_des.get_width() / 2, hauteur_fenetre / 2 - image_des.get_height() / 2))
-    pygame.display.update()
-    pygame.time.wait(1000)
-
-    # Supprimer l'image du dé	
-    screen.fill((0, 0, 0))
-
-    # Redimensionner l'image du dé
-    image_des = pygame.transform.scale(image_des, (int(image_des.get_width() * 0.5), int(image_des.get_height() * 0.5)))
-    screen.blit(image_des, (0, 0))
-    pygame.display.update()
-
-    # Attendre que le joueur clique sur un bouton
-    while True:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                quit()
-            elif event.type == pygame.KEYDOWN:
-                return resultat + 1
-
-
 
 
 
@@ -238,16 +185,16 @@ def main():
                         # Afficher une image aléatoire du dé
                         reultat_lancer_des = random.randint(1, 6)
                         image_des = images_des[reultat_lancer_des -1]
-                        image_des = pygame.transform.scale(image_des, (int(image_des.get_width() * 0.8), int(image_des.get_height() * 0.8)))
+                        image_des = pygame.transform.scale(image_des, (int(image_des.get_width() * 0.8 * taille_ajustee), int(image_des.get_height() * 0.8 * taille_ajustee)))
                         screen.blit(image_des, (largeur_fenetre / 2 - image_des.get_width() / 2, hauteur_fenetre / 2 - image_des.get_height() / 2))
                         pygame.display.update()
 
                         # Attendre un court instant avant d'afficher la prochaine image
-                        pygame.time.wait(75)
+                        pygame.time.wait(70)
 
                     # Afficher une image aléatoire du dé 
                     image_des = images_des[reultat_lancer_des -1]
-                    image_des = pygame.transform.scale(image_des, (int(image_des.get_width() * 0.8), int(image_des.get_height() * 0.8)))
+                    image_des = pygame.transform.scale(image_des, (int(image_des.get_width() * 0.8 * taille_ajustee), int(image_des.get_height() * 0.8 * taille_ajustee)))
 
                     # Afficher l'image du dé
                     screen.blit(image_des, (largeur_fenetre / 2 - image_des.get_width() / 2, hauteur_fenetre / 2 - image_des.get_height() / 2))
@@ -290,6 +237,14 @@ def main():
                     screen.blit(pygame.transform.scale(perroquet_image, (taille_personnage, taille_personnage)), position_perroquet)
                     screen.blit(pygame.transform.scale(aventurier_image, (taille_personnage, taille_personnage)), position_aventurier)
 
+                    # afficher le tour du joueur en graphique
+                    font = pygame.font.SysFont("BlackBeard", largeur_fenetre // 32)
+                    text = font.render(f"Tour de {joueur.nom}", True, (255, 255, 255), (0, 0, 0)) 
+                    textRect = text.get_rect()
+                    # centrer le texte en haut de la fenêtre (haut milieu)
+                    textRect.center = (largeur_fenetre // 2, hauteur_fenetre // 30)
+                    screen.blit(text, textRect)
+
                     pygame.display.update()
                     
                     deplacement = None
@@ -318,8 +273,51 @@ def main():
 
                     
                     ancienne_position = joueur.position
-                    plateau.deplacer_joueur(joueur, ancienne_position, deplacement)
 
+                    for i in range(ancienne_position, deplacement):
+                        print(plateau.cases[i]["description"])
+                        if plateau.cases[i]["description"] == "Monstre":
+                            if plateau.combat_monstre(joueur) is False:
+                                print("Case du monstre: ", plateau.cases[i]["numero"])
+                                print("Case à reculer: ", plateau.cases[i]["numero"] - 1)
+                                deplacement = i - ancienne_position
+                                if ancienne_position + deplacement < 1:  # Check if new position is negative
+                                    deplacement = 1 - ancienne_position
+                                break
+                                
+                    
+                    plateau.deplacer_joueur(joueur, ancienne_position, deplacement)
+                    
+                    nouvelle_position_perdant = None
+
+
+                    for i in range(len(joueurs)):
+                        for j in range(i + 1, len(joueurs)):
+                            if joueurs[i].position == joueurs[j].position:
+                                if joueur.position != 1:       
+                                    gagnant = plateau.combat_joueurs(joueurs[i], joueurs[j])
+                                    perdant = joueurs[j] if gagnant == joueurs[i] else joueurs[i] 
+                                    nouvelle_position_perdant = perdant.position - 1  # Nouvelle position après avoir perdu
+                                    while nouvelle_position_perdant >= 1 and plateau.cases[nouvelle_position_perdant - 1]["joueurs_sur_case"]:
+                                        # dire quel joueur est déjà présent sur la case si le joeur ne dessent pas en dessous de 1
+                                        print(f"Le joueur {plateau.cases[nouvelle_position_perdant - 1]['joueurs_sur_case'][0].nom} est déjà présent sur la case {nouvelle_position_perdant}. Le joueur {perdant.nom} est tombe sur la case {nouvelle_position_perdant - 1}.")
+                                        nouvelle_position_perdant -= 1
+                                    if nouvelle_position_perdant < 1:
+                                        nouvelle_position_perdant = 1
+                                    plateau.deplacer_joueur(perdant, perdant.position, nouvelle_position_perdant)
+                        for joueur in joueurs:
+                            plateau.mettre_a_jour_joueurs_sur_case(joueur, joueur.position)    
+
+
+                    # supprimer image de dés
+                    screen.fill((0, 0, 0))
+                    screen.blit(plateau_image, (0, 0))
+
+
+
+                    
+
+                    
                     for joueur in joueurs:
                         plateau.mettre_a_jour_joueurs_sur_case(joueur, joueur.position)
                         # deplacer l'image du joueur sur la case
@@ -333,36 +331,19 @@ def main():
                             position_aventurier = (positions_cercles[f"Case {joueur.position}"][0] - taille_personnage // 2, positions_cercles[f"Case {joueur.position}"][1] - taille_personnage // 2)
 
 
+                    # Réafficher les images des personnages
+                    screen.blit(pygame.transform.scale(pirate_image, (taille_personnage, taille_personnage)), position_pirate)
+                    screen.blit(pygame.transform.scale(pirate2_image, (taille_personnage, taille_personnage)), position_pirate2)
+                    screen.blit(pygame.transform.scale(perroquet_image, (taille_personnage, taille_personnage)), position_perroquet)
+                    screen.blit(pygame.transform.scale(aventurier_image, (taille_personnage, taille_personnage)), position_aventurier)
+                    
+                    # Mettre à jour l'affichage
+                    pygame.display.update()
 
+                    
+                    # Pause de 1 secondes
+                    pygame.time.wait(1000)
 
-
-                    # ------------------------------------------------------------------- #
-
-                    ancienne_position = joueur.position
-
-                    for i in range(ancienne_position, ancienne_position + deplacement):
-                        print(plateau.cases[i]["description"])
-                        if plateau.cases[i]["description"] == "Monstre":
-                            if plateau.combat_monstre(joueur) is False:
-                                print("Case du monstre: ", plateau.cases[i]["numero"])
-                                print("Case à reculer: ", plateau.cases[i]["numero"] - 1)
-                                deplacement = i - ancienne_position
-                                break
-
-
-                    plateau.deplacer_joueur(joueur, ancienne_position, deplacement)
-
-                    for i in range(len(joueurs)):
-                        for j in range(i + 1, len(joueurs)):
-                            if joueurs[i].position == joueurs[j].position:
-                                if joueur.position != 1:       
-                                    gagnant = plateau.combat_joueurs(joueurs[i], joueurs[j])
-                                    perdant = joueurs[j] if gagnant == joueurs[i] else joueurs[i] 
-                                    plateau.deplacer_joueur(perdant, perdant.position, -1)
-                        for joueur in joueurs:
-                            plateau.mettre_a_jour_joueurs_sur_case(joueur, joueur.position)
-
-                    # ------------------------------------------------------------------- #         
 
 
 
