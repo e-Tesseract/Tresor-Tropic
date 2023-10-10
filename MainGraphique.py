@@ -40,8 +40,6 @@ def main():
     joueurs.append(joueur3)
     joueurs.append(joueur4)
 
-
-    
     # Créez le plateau
     plateau = Plateau(joueurs=joueurs)
 
@@ -141,9 +139,11 @@ def main():
             screen.blit(pygame.transform.scale(aventurier_image, (taille_personnage, taille_personnage)), position_aventurier)
 
 
-            while all(joueur.position < 30 for joueur in joueurs):
-             # Tant que les joueurs ne sont pas sur la case 31, continuez le jeu
-                print("---------------------- TOUR ----------------------")
+            finJeu = False
+            gagnants= []
+
+            print("---------------------- MAIN ----------------------\n")
+            while not finJeu:
 
                 # mettre à jour la fenêtre
                 pygame.display.update()
@@ -217,8 +217,9 @@ def main():
 
 
 
-                    for i in range(1, reultat_lancer_des  + 1):
-                        cases_disponible.append(i + joueur.position)
+                    for i in range(1, reultat_lancer_des + 1):
+                        if i + joueur.position <= 30:
+                            cases_disponible.append(i + joueur.position)
 
 
                     # Redessiner les cercles des cases disponibles
@@ -287,6 +288,11 @@ def main():
                                 
                     
                     plateau.deplacer_joueur(joueur, ancienne_position, deplacement)
+
+                    if joueur.position >= 30:
+                        gagnants.append(joueur)
+                        finJeu = True
+                        break
                     
                     nouvelle_position_perdant = None
 
@@ -343,6 +349,10 @@ def main():
                     
                     # Pause de 1 secondes
                     pygame.time.wait(1000)
+            
+            print("---------------------- FIN ----------------------")
+            # Affichez le gagnant
+            print(f"{gagnants[0].nom} a TROUVÉ LE TRESOR !.")
 
 
 
