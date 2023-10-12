@@ -29,6 +29,12 @@ class Plateau:
         self.cases[4]["description"] = "\033[92mEchelle\033[0m"
         # Case 8
         self.cases[7]["description"] = "\033[92mEchelle\033[0m"
+        # Case 14
+        self.cases[13]["description"] = "\033[92mEchelle\033[0m"
+        # Case 24
+        self.cases[23]["description"] = "\033[92mEchelle\033[0m"
+        # Case 26
+        self.cases[25]["description"] = "\033[92mEchelle\033[0m"
         # Case 29
         self.cases[28]["description"] = "\033[92mEchelle\033[0m"
 
@@ -36,20 +42,41 @@ class Plateau:
             self.cases[joueur.position - 1]["joueurs_sur_case"].append(joueur)
 
     def afficher_plateau(self) -> None:
-        # Affiche le plateau avec les descriptions des cases
+        """
+        Affiche le plateau avec les descriptions des cases et les joueurs sur chaque case.
+
+        Returns:
+            None
+        """
         for case in self.cases:
             joueurs_sur_case = ", ".join([joueur.nom for joueur in case["joueurs_sur_case"]])
             print(f'Case {case["numero"]}: {case["description"]}, Joueurs sur case: {joueurs_sur_case}')
 
-    def joueur_sur_case(self, joueur, numero_case) -> bool:
-        # Vérifie si le joueur se trouve sur la case avec le numéro spécifié
+    def joueur_sur_case(self, joueur: Joueur, numero_case: int) -> bool:
+        """
+        Vérifie si le joueur se trouve sur la case avec le numéro spécifié.
+
+        Args:
+            joueur (Joueur): Le joueur à vérifier.
+            numero_case (int): Le numéro de la case à vérifier.
+
+        Returns:
+            bool: True si le joueur se trouve sur la case, False sinon.
+        """
         return joueur.position == numero_case
     
     
-    def deplacer_joueur(self, joueur, ancienne_position,  distance) -> None:
-        """Déplace le joueur sur le plateau.
-        param joueur: le joueur à déplacer
-        param distance: la distance à parcourir"""
+    def deplacer_joueur(self, joueur: Joueur, ancienne_position, distance: int) -> None:
+        """
+        Déplace le joueur sur le plateau.
+
+        Args:
+            joueur (Joueur): Le joueur à déplacer.
+            distance (int): La distance à parcourir.
+
+        Returns:
+            None
+        """
 
         # Déplace le joueur sur le plateau
         self.cases[joueur.position - 1]["joueurs_sur_case"].remove(joueur)
@@ -57,7 +84,7 @@ class Plateau:
         # Vérifie si le déplacement est valide
         if distance is not None:
 
-            joueur.position += distance
+            joueur.position = distance
             # Echelles pour monter ou descendre de plusieurs cases à la fois sur le plateau
             if joueur.position == 5:
                 print("Le joueur est sur la case 5, il recule case 2.")
@@ -65,15 +92,18 @@ class Plateau:
             elif joueur.position == 8:
                 print("Le joueur est sur la case 8, il avance case 12.")
                 joueur.position = 12
+            elif joueur.position == 14:
+                print("Le joueur est sur la case 14, il avance case 18.")
+                joueur.position = 18
+            elif joueur.position == 24:
+                print("Le joueur est sur la case 24, il recule case 20.")
+                joueur.position = 20
+            elif joueur.position == 26:
+                print("Le joueur est sur la case 26, il avance case 28.")
+                joueur.position = 28
             elif joueur.position == 29:
                 print("Le joueur est sur la case 29, il recule case 21.")
                 joueur.position = 21
-
-
-            
-
-
-
         else:
             print("Déplacement invalide. Le joueur ne bouge pas.")
 
@@ -82,8 +112,18 @@ class Plateau:
 
         
 
-    def mettre_a_jour_joueurs_sur_case(self, joueur, numero_case) -> None: 
-        # Met à jour la liste des joueurs sur la case spécifiée
+    def mettre_a_jour_joueurs_sur_case(self, joueur: Joueur, numero_case: int) -> None: 
+        """
+        Met à jour la liste des joueurs sur la case spécifiée.
+
+        Args:
+            joueur (Joueur): Le joueur à ajouter à la case.
+            numero_case (int): Le numéro de la case à mettre à jour.
+
+        Returns:
+            None
+        """
+
         case = self.cases[numero_case - 1] 
 
         if joueur in case["joueurs_sur_case"]:
@@ -94,7 +134,18 @@ class Plateau:
         case["joueurs_sur_case"].append(joueur)
 
     
-    def combat_joueurs(self, joueur1, joueur2) -> Joueur:
+    def combat_joueurs(self, joueur1: Joueur, joueur2: Joueur) -> Joueur:
+        """
+        Simule un combat entre deux joueurs.
+
+        Args:
+            joueur1 (Joueur): Le premier joueur.
+            joueur2 (Joueur): Le deuxième joueur.
+
+        Returns:
+            Joueur: Le joueur gagnant le combat.
+        """
+
         # Fonction pour simuler un combat entre deux joueurs
         gagnant = None
 
@@ -125,11 +176,16 @@ class Plateau:
         
         return gagnant
     
-    def combat_monstre(self, joueur) -> bool:
-        '''Fonction pour simuler un combat entre un joueur et un monstre.\n 
-        Retourne True si le joueur gagne le combat, False sinon.'''
+    def combat_monstre(self, joueur: Joueur):
+        """
+        Simule un combat entre un joueur et un monstre.
 
-        # Simuler le combat avec le monstre
+        Args:
+            joueur (Joueur): Le joueur qui combat le monstre.
+
+        Returns:
+            bool: True si le joueur gagne le combat, False sinon.
+        """
 
         Egalite = True
 
