@@ -176,44 +176,6 @@ class Plateau:
         
         return gagnant
     
-    def combat_monstre(self, joueur: Joueur):
-        """
-        Simule un combat entre un joueur et un monstre.
-
-        Args:
-            joueur (Joueur): Le joueur qui combat le monstre.
-
-        Returns:
-            bool: True si le joueur gagne le combat, False sinon.
-        """
-
-        Egalite = True
-
-        while Egalite:
-
-            de1_monstre = random.randint(1, 6)
-            de2_monstre = random.randint(1, 6)
-            de1_joueur = joueur.lancer_de_des()
-            de2_joueur = joueur.lancer_de_des()
-
-            resultat_monstre = de1_monstre + de2_monstre
-            resultat_joueur = de1_joueur + de2_joueur
-
-            print(f"Combat entre {joueur.nom} et le monstre")
-            print(f"Résultat de {joueur.nom}: {resultat_joueur}")
-            print(f"Résultat du monstre: {resultat_monstre}")
-
-            if resultat_joueur > resultat_monstre:
-                print(f"{joueur.nom} a gagné le combat !")
-                Egalite = False
-                return True
-            elif resultat_joueur < resultat_monstre:
-                print(f"{joueur.nom} a perdu le combat !")
-                Egalite = False
-                return False
-            else:
-                print("Égalité !")
-                print("Nouveau combat !")
 
 
     

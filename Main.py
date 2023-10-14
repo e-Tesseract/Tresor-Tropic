@@ -1,5 +1,6 @@
 from Plateau import Plateau
 from Joueur import Joueur
+import random
 
 # Demandez le nombre de joueurs
 nombre_de_joueurs = int(input("Entrez le nombre de joueurs : "))
@@ -14,13 +15,17 @@ for i in range(1, nombre_de_joueurs + 1):
 # Créez le plateau
 plateau = Plateau(joueurs=joueurs)
 
+finJeu = False
+gagnants= []
+
 print("---------------------- MAIN ----------------------\n")
-while all(joueur.position < 30 for joueur in joueurs):
+while not finJeu:
+
+    tour_suivant = input("\nAppuyez sur Entrée pour continuer...\n")
+    plateau.afficher_plateau()
+
     # Tant que les joueurs ne sont pas sur la case 31, continuez le jeu
     print("---------------------- TOUR ----------------------")
-
-    # afficher le plateau
-    plateau.afficher_plateau()
 
     # Affichez les informations des joueurs
     for joueur in joueurs:
@@ -35,7 +40,9 @@ while all(joueur.position < 30 for joueur in joueurs):
         cases_disponible = []
 
         for i in range(1, reultat_lancer_des + 1):
-            cases_disponible.append(i + joueur.position)
+            if i + joueur.position <= 30:
+                cases_disponible.append(i + joueur.position)
+            
         
         print("Cases disponible: ", cases_disponible)
 
@@ -55,14 +62,44 @@ while all(joueur.position < 30 for joueur in joueurs):
         for i in range(ancienne_position, deplacement):
             print(plateau.cases[i]["description"])
             if plateau.cases[i]["description"] == "Monstre":
-                if plateau.combat_monstre(joueur) is False:
-                    print("Case du monstre: ", plateau.cases[i]["numero"])
-                    print("Case à reculer: ", plateau.cases[i]["numero"] - 1)
-                    deplacement = plateau.cases[i]["numero"] - 1
-                    break
+
+                print(f"Combat entre {joueur.nom} et le monstre")
+                Egalite = True
+
+                while Egalite:
+                    de1_monstre = random.randint(1, 6)
+                    de2_monstre = random.randint(1, 6)
+                    de1_joueur = joueur.lancer_de_des()
+                    de2_joueur = joueur.lancer_de_des()
+
+                    resultat_monstre = de1_monstre + de2_monstre
+                    resultat_joueur = de1_joueur + de2_joueur
+
+                    print(f"Résultat de {joueur.nom}: {resultat_joueur}")
+                    print(f"Résultat du monstre: {resultat_monstre}")
+
+                    if resultat_joueur > resultat_monstre:
+                        print(f"{joueur.nom} a gagné le combat !")
+                        Egalite = False
+                        break
+
+                    elif resultat_joueur < resultat_monstre:
+                        Egalite = False
+                        print(f"{joueur.nom} a perdu le combat !")
+                        deplacement = plateau.cases[i]["numero"] - 1
+                        break
+
+                    else:
+                        print("Égalité !")
+                        print("Nouveau combat !")
 
 
         plateau.deplacer_joueur(joueur, ancienne_position, deplacement)
+
+        if joueur.position >= 30:
+            gagnants.append(joueur)
+            finJeu = True
+            break
 
         for i in range(len(joueurs)):
             for j in range(i + 1, len(joueurs)):
@@ -85,15 +122,9 @@ while all(joueur.position < 30 for joueur in joueurs):
             for joueur in joueurs:
                 plateau.mettre_a_jour_joueurs_sur_case(joueur, joueur.position)
 
+        
+                
+print("---------------------- FIN ----------------------")
+# Affichez le gagnant
+print(f"{gagnants[0].nom} a TROUVÉ LE TRESOR !.")
 
-
-    tour_suivant = input("\nAppuyez sur Entrée pour continuer...\n")
-    plateau.afficher_plateau()
-
-gagnants = [joueur for joueur in joueurs if joueur.position >= 30]
-if gagnants:
-    print("Les joueurs gagnants sont :")
-    for gagnant in gagnants:
-        print(f"- {gagnant.nom}")
-else:
-    print("Aucun joueur n'a atteint la case 31. C'est un match nul.")

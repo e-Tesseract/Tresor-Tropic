@@ -9,7 +9,7 @@ pygame.init()
 infoObject = pygame.display.Info()
 largeur_ecran, hauteur_ecran = infoObject.current_w, infoObject.current_h
 
-taille_ajustee = 1
+taille_ajustee = 0.9
 # Définir la taille de la fenêtre en pourcentage de la taille de l'écran
 largeur_fenetre, hauteur_fenetre = int(largeur_ecran * taille_ajustee), int(hauteur_ecran * taille_ajustee)
 
@@ -21,6 +21,17 @@ plateau_image = pygame.image.load('Map_AvecTraits2.png')
 
 # Redimensionner l'image du plateau pour qu'elle remplisse la fenêtre
 plateau_image = pygame.transform.scale(plateau_image, (largeur_fenetre, hauteur_fenetre))
+
+# Charger les images des faces du dé
+images_des = [
+    pygame.image.load("./images/Des/dice1.png"),
+    pygame.image.load("./images/Des/dice2.png"),
+    pygame.image.load("./images/Des/dice3.png"),
+    pygame.image.load("./images/Des/dice4.png"),
+    pygame.image.load("./images/Des/dice5.png"),
+    pygame.image.load("./images/Des/dice6.png")
+]
+
 
 
 
@@ -85,8 +96,7 @@ def main():
         "Case 27": (largeur_ecran * taille_ajustee * 0.84, hauteur_ecran * taille_ajustee * 0.69),
         "Case 28": (largeur_ecran * taille_ajustee * 0.818, hauteur_ecran * taille_ajustee * 0.55),
         "Case 29": (largeur_ecran * taille_ajustee * 0.773, hauteur_ecran * taille_ajustee * 0.43),
-        "Case 30": (largeur_ecran * taille_ajustee * 0.854, hauteur_ecran * taille_ajustee * 0.368),
-
+        "Case 30": (largeur_ecran * taille_ajustee * 0.854, hauteur_ecran * taille_ajustee * 0.368)
     }
 
 
@@ -119,7 +129,7 @@ def main():
                         # Calculer la distance entre le clic et la position du cercle
                         distance = ((cercle_x - x) ** 2 + (cercle_y - y) ** 2) ** 0.5
 
-                        # Si la distance est inférieure à un seuil (la moitié de la taille du cercle), renvoyer l'identifiant de la case
+                        # Si la distance est inférieure à un seuil (la moitié de la taille du cercle), renvoyer la case
                         if distance < largeur_ecran * taille_cercle * taille_ajustee:
                             print(f"Case cliquée : {case}")
 
@@ -159,6 +169,8 @@ def main():
                     # afficher le tour du joueur en graphique
                     font = pygame.font.SysFont("BlackBeard", largeur_fenetre // 32)
                     text = font.render(f"Tour de {joueur.nom}", True, (255, 255, 255), (0, 0, 0)) 
+                    # afficher le personnage du joueur en petit a coté de son nom
+                    screen.blit(pygame.transform.scale(joueur.photo, (taille_personnage // 2, taille_personnage // 2)), (text.get_width() * 3.6, 0))
                     textRect = text.get_rect()
                     # centrer le texte en haut de la fenêtre (haut milieu)
                     textRect.center = (largeur_fenetre // 2, hauteur_fenetre // 30)
@@ -166,20 +178,7 @@ def main():
                     pygame.display.update()
 
 
-
-
-
-                    # Animation de lancer de dés 
-                    # Charger les images des faces du dé
-                    images_des = [
-                        pygame.image.load("./images/Des/dice1.png"),
-                        pygame.image.load("./images/Des/dice2.png"),
-                        pygame.image.load("./images/Des/dice3.png"),
-                        pygame.image.load("./images/Des/dice4.png"),
-                        pygame.image.load("./images/Des/dice5.png"),
-                        pygame.image.load("./images/Des/dice6.png")
-                    ]
-
+                    # Animation de lancer de dés
                     # Boucle pour afficher les images des faces du dé de manière aléatoire
                     for i in range(25):
                         # Afficher une image aléatoire du dé
@@ -241,6 +240,9 @@ def main():
                     # afficher le tour du joueur en graphique
                     font = pygame.font.SysFont("BlackBeard", largeur_fenetre // 32)
                     text = font.render(f"Tour de {joueur.nom}", True, (255, 255, 255), (0, 0, 0)) 
+                    # afficher le personnage du joueur en petit a coté de son nom
+                    screen.blit(pygame.transform.scale(joueur.photo, (taille_personnage // 2, taille_personnage // 2)), (text.get_width() * 3.6, 0))
+
                     textRect = text.get_rect()
                     # centrer le texte en haut de la fenêtre (haut milieu)
                     textRect.center = (largeur_fenetre // 2, hauteur_fenetre // 30)
@@ -250,7 +252,7 @@ def main():
                     
                     deplacement = None
 
-                    # attendre que le joueur clique sur une case disponible
+                    # Attendre que le joueur clique sur une case disponible
                     while True:
                         for event in pygame.event.get():
                             if event.type == pygame.QUIT:
@@ -259,14 +261,14 @@ def main():
                             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                                 x, y = event.pos
 
-                                # Vérifiez si le clic est sur une case disponible
+                                # On vérifie si le clic est sur une case disponible
                                 for case, (cercle_x, cercle_y) in positions_cercles.items():
                                     distance = ((cercle_x - x) ** 2 + (cercle_y - y) ** 2) ** 0.5
 
                                     if int(case.split()[1]) in cases_disponible and distance < largeur_ecran * taille_cercle * taille_ajustee:
                                         choix_case = int(case.split()[1])
                                         deplacement = choix_case
-                                        print(f"Case cliquée : {case}")  # Ajouter cette ligne pour afficher la case cliquée
+                                        print(f"Case cliquée : {case}")  
                                         break
                         
                         if deplacement is not None:
@@ -278,14 +280,122 @@ def main():
                     for i in range(ancienne_position, deplacement):
                         print(plateau.cases[i]["description"])
                         if plateau.cases[i]["description"] == "Monstre":
-                            if plateau.combat_monstre(joueur) is False:
-                                print("Case du monstre: ", plateau.cases[i]["numero"])
-                                print("Case à reculer: ", plateau.cases[i]["numero"] - 1)
-                                deplacement = i - ancienne_position
-                                if ancienne_position + deplacement < 1:  # Check if new position is negative
-                                    deplacement = 1 - ancienne_position
-                                break
+
+                            print(f"Combat entre {joueur.nom} et le monstre")
+                            Egalite = True
+
+                            while Egalite:
+
+                                # Animation de lancer de dés 
+
+                                font = pygame.font.SysFont("BlackBeard", largeur_fenetre // 32)
+
+                                # afficher le nom du joeuur au dessus des dés
+                                text = font.render(f"{joueur.nom}", True, (255, 255, 255), (0, 0, 0)) 
+                                textRect = text.get_rect()
+                                textRect = (largeur_fenetre * 0.12 , hauteur_fenetre * 0.3)
+                                screen.blit(text, textRect)
+
+                                # afficher le monstre au dessus des dés
+                                text = font.render("Monstre", True, (255, 255, 255), (0, 0, 0)) 
+                                textRect = text.get_rect()
+                                textRect = (largeur_fenetre* 0.8 , hauteur_fenetre * 0.3)
+                                screen.blit(text, textRect)
                                 
+                                # Boucle pour afficher les images des faces du dé de manière aléatoire
+                                for i in range(25):
+                                    # Afficher une image aléatoire du dé
+                                    de1_monstre = random.randint(1, 6)
+                                    de2_monstre = random.randint(1, 6)
+                                    de1_joueur = joueur.lancer_de_des()
+                                    de2_joueur = joueur.lancer_de_des()
+
+                                    image1_des_joueur = images_des[de1_joueur -1]
+                                    image2_des_joueur = images_des[de2_joueur -1]
+
+                                    image1_des_monstre = images_des[de1_monstre -1]
+                                    image2_des_monstre = images_des[de2_monstre -1]
+
+                                    image1_des_joueur = pygame.transform.scale(image1_des_joueur, (int(image1_des_joueur.get_width() * 0.5 * taille_ajustee), int(image1_des_joueur.get_height() * 0.5 * taille_ajustee)))
+                                    image2_des_joueur = pygame.transform.scale(image2_des_joueur, (int(image2_des_joueur.get_width() * 0.5 * taille_ajustee), int(image2_des_joueur.get_height() * 0.5 * taille_ajustee)))
+
+                                    image1_des_monstre = pygame.transform.scale(image1_des_monstre, (int(image1_des_monstre.get_width() * 0.5 * taille_ajustee), int(image1_des_monstre.get_height() * 0.5 * taille_ajustee)))
+                                    image2_des_monstre = pygame.transform.scale(image2_des_monstre, (int(image2_des_monstre.get_width() * 0.5 * taille_ajustee), int(image2_des_monstre.get_height() * 0.5 * taille_ajustee)))
+
+
+
+                                    screen.blit(image1_des_joueur, (largeur_fenetre / 1.2 - image1_des_joueur.get_width() / 2, hauteur_fenetre / 2 - image1_des_joueur.get_height() / 2))
+                                    screen.blit(image2_des_joueur, (largeur_fenetre / 1.2 - image2_des_joueur.get_width() / 2, hauteur_fenetre / 2 + image2_des_joueur.get_height() / 2))
+
+                                    screen.blit(image1_des_monstre, (largeur_fenetre / 6 - image1_des_monstre.get_width() / 2, hauteur_fenetre / 2 - image1_des_monstre.get_height() / 2))
+                                    screen.blit(image2_des_monstre, (largeur_fenetre / 6 - image2_des_monstre.get_width() / 2, hauteur_fenetre / 2 + image2_des_monstre.get_height() / 2))
+
+                                    pygame.display.update()
+
+                                    # Attendre un court instant avant d'afficher la prochaine image
+                                    pygame.time.wait(70)
+
+                                # Afficher une image aléatoire du dé 
+                                image1_des_joueur = images_des[de1_joueur -1]
+                                image2_des_joueur = images_des[de2_joueur -1]
+
+                                image1_des_monstre = images_des[de1_monstre -1]
+                                image2_des_monstre = images_des[de2_monstre -1]
+
+
+
+                                image1_des_joueur = pygame.transform.scale(image1_des_joueur, (int(image1_des_joueur.get_width() * 0.5 * taille_ajustee), int(image1_des_joueur.get_height() * 0.5 * taille_ajustee)))
+                                image2_des_joueur = pygame.transform.scale(image2_des_joueur, (int(image2_des_joueur.get_width() * 0.5 * taille_ajustee), int(image2_des_joueur.get_height() * 0.5 * taille_ajustee)))
+                                image1_des_monstre = pygame.transform.scale(image1_des_monstre, (int(image1_des_monstre.get_width() * 0.5 * taille_ajustee), int(image1_des_monstre.get_height() * 0.5 * taille_ajustee)))
+                                image2_des_monstre = pygame.transform.scale(image2_des_monstre, (int(image2_des_monstre.get_width() * 0.5 * taille_ajustee), int(image2_des_monstre.get_height() * 0.5 * taille_ajustee)))
+
+
+
+                                # Afficher l'image des dés
+                                screen.blit(image1_des_joueur, (largeur_fenetre / 1.2 - image1_des_joueur.get_width() / 2, hauteur_fenetre / 2 - image1_des_joueur.get_height() / 2))
+                                screen.blit(image2_des_joueur, (largeur_fenetre / 1.2 - image2_des_joueur.get_width() / 2, hauteur_fenetre / 2 + image2_des_joueur.get_height() / 2))
+
+                                screen.blit(image1_des_monstre, (largeur_fenetre / 6 - image1_des_monstre.get_width() / 2, hauteur_fenetre / 2 - image1_des_monstre.get_height() / 2))
+                                screen.blit(image2_des_monstre, (largeur_fenetre / 6 - image2_des_monstre.get_width() / 2, hauteur_fenetre / 2 + image2_des_monstre.get_height() / 2))
+
+                                resultat_monstre = de1_monstre + de2_monstre
+                                resultat_joueur = de1_joueur + de2_joueur
+
+                                
+                                font = pygame.font.SysFont("BlackBeard", largeur_fenetre // 20)
+
+                                text = font.render(f"{resultat_joueur}", True, (255, 255, 255), (0, 0, 0)) 
+                                textRect = text.get_rect()
+                                textRect = (largeur_fenetre * 0.15 , hauteur_fenetre * 0.875)
+                                screen.blit(text, textRect)
+
+                                text = font.render(f"{resultat_monstre}", True, (255, 255, 255), (0, 0, 0)) 
+                                textRect = text.get_rect()
+                                textRect = (largeur_fenetre * 0.835 , hauteur_fenetre * 0.875)
+                                screen.blit(text, textRect)
+
+                                pygame.display.update()
+                                pygame.time.wait(2000)
+
+                                print(f"Résultat de {joueur.nom}: {resultat_joueur}")
+                                print(f"Résultat du monstre: {resultat_monstre}")
+
+                                if resultat_joueur > resultat_monstre:
+                                    print(f"{joueur.nom} a gagné le combat !")
+                                    Egalite = False
+                                    break
+
+                                elif resultat_joueur < resultat_monstre:
+                                    Egalite = False
+                                    print(f"{joueur.nom} a perdu le combat !")
+                                    if ancienne_position + deplacement < 1: 
+                                        deplacement = 1 - ancienne_position
+                                    break                                    
+
+                                else:
+                                    print("Egalité !")
+                                    print("Nouveau combat !")
+
                     
                     plateau.deplacer_joueur(joueur, ancienne_position, deplacement)
 
@@ -318,10 +428,6 @@ def main():
                     # supprimer image de dés
                     screen.fill((0, 0, 0))
                     screen.blit(plateau_image, (0, 0))
-
-
-
-                    
 
                     
                     for joueur in joueurs:
