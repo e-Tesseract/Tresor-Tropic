@@ -277,9 +277,15 @@ def main():
                     
                     ancienne_position = joueur.position
 
+                    print(f"ancienne position: {ancienne_position}")
+                    print(f"deplacement: {deplacement}")
+
                     for i in range(ancienne_position, deplacement):
                         print(plateau.cases[i]["description"])
+
                         if plateau.cases[i]["description"] == "Monstre":
+                            case_monstre = i + 1
+                            print(case_monstre)
 
                             print(f"Combat entre {joueur.nom} et le monstre")
                             Egalite = True
@@ -287,7 +293,6 @@ def main():
                             while Egalite:
 
                                 # Animation de lancer de dés 
-
                                 font = pygame.font.SysFont("BlackBeard", largeur_fenetre // 32)
 
                                 # afficher le nom du joeuur au dessus des dés
@@ -322,8 +327,6 @@ def main():
                                     image1_des_monstre = pygame.transform.scale(image1_des_monstre, (int(image1_des_monstre.get_width() * 0.5 * taille_ajustee), int(image1_des_monstre.get_height() * 0.5 * taille_ajustee)))
                                     image2_des_monstre = pygame.transform.scale(image2_des_monstre, (int(image2_des_monstre.get_width() * 0.5 * taille_ajustee), int(image2_des_monstre.get_height() * 0.5 * taille_ajustee)))
 
-
-
                                     screen.blit(image1_des_joueur, (largeur_fenetre / 1.2 - image1_des_joueur.get_width() / 2, hauteur_fenetre / 2 - image1_des_joueur.get_height() / 2))
                                     screen.blit(image2_des_joueur, (largeur_fenetre / 1.2 - image2_des_joueur.get_width() / 2, hauteur_fenetre / 2 + image2_des_joueur.get_height() / 2))
 
@@ -342,14 +345,10 @@ def main():
                                 image1_des_monstre = images_des[de1_monstre -1]
                                 image2_des_monstre = images_des[de2_monstre -1]
 
-
-
                                 image1_des_joueur = pygame.transform.scale(image1_des_joueur, (int(image1_des_joueur.get_width() * 0.5 * taille_ajustee), int(image1_des_joueur.get_height() * 0.5 * taille_ajustee)))
                                 image2_des_joueur = pygame.transform.scale(image2_des_joueur, (int(image2_des_joueur.get_width() * 0.5 * taille_ajustee), int(image2_des_joueur.get_height() * 0.5 * taille_ajustee)))
                                 image1_des_monstre = pygame.transform.scale(image1_des_monstre, (int(image1_des_monstre.get_width() * 0.5 * taille_ajustee), int(image1_des_monstre.get_height() * 0.5 * taille_ajustee)))
                                 image2_des_monstre = pygame.transform.scale(image2_des_monstre, (int(image2_des_monstre.get_width() * 0.5 * taille_ajustee), int(image2_des_monstre.get_height() * 0.5 * taille_ajustee)))
-
-
 
                                 # Afficher l'image des dés
                                 screen.blit(image1_des_joueur, (largeur_fenetre / 1.2 - image1_des_joueur.get_width() / 2, hauteur_fenetre / 2 - image1_des_joueur.get_height() / 2))
@@ -361,7 +360,6 @@ def main():
                                 resultat_monstre = de1_monstre + de2_monstre
                                 resultat_joueur = de1_joueur + de2_joueur
 
-                                
                                 font = pygame.font.SysFont("BlackBeard", largeur_fenetre // 20)
 
                                 text = font.render(f"{resultat_joueur}", True, (255, 255, 255), (0, 0, 0)) 
@@ -380,17 +378,17 @@ def main():
                                 print(f"Résultat de {joueur.nom}: {resultat_joueur}")
                                 print(f"Résultat du monstre: {resultat_monstre}")
 
+
                                 if resultat_joueur > resultat_monstre:
                                     print(f"{joueur.nom} a gagné le combat !")
                                     Egalite = False
                                     break
 
                                 elif resultat_joueur < resultat_monstre:
-                                    Egalite = False
                                     print(f"{joueur.nom} a perdu le combat !")
-                                    if ancienne_position + deplacement < 1: 
-                                        deplacement = 1 - ancienne_position
-                                    break                                    
+                                    Egalite = False  
+                                    deplacement = case_monstre -1
+                                    break                    
 
                                 else:
                                     print("Egalité !")
