@@ -104,21 +104,48 @@ while not finJeu:
         for i in range(len(joueurs)):
             for j in range(i + 1, len(joueurs)):
                 if joueurs[i].position == joueurs[j].position:
+
                     if joueur.position != 1:       
-                        gagnant = plateau.combat_joueurs(joueurs[i], joueurs[j])
-                        perdant = joueurs[j] if gagnant == joueurs[i] else joueurs[i] 
+
+                        print(f"Combat entre {joueurs[i].nom} et {joueurs[j].nom}")
+
+                        Egalite = True
+
+                        while Egalite:
+
+
+                            de1 = joueurs[i].lancer_de_des()
+                            de2 = joueurs[j].lancer_de_des()
+                            print(f"Résultat de {joueurs[i].nom}: {de1}")
+                            print(f"Résultat de {joueurs[j].nom}: {de2}")
+                            if de1 > de2:
+                                gagnant = joueurs[i]
+                                perdant = joueurs[j]
+                                print(f"{joueurs[i].nom} a gagné le combat !")
+                                Egalite = False
+                            
+                            elif de1 < de2:
+                                gagnant = joueurs[j]
+                                perdant = joueurs[i]
+                                print(f"{joueurs[j].nom} a gagné le combat !")
+
+                            else:
+                                print("Égalité !")
+                                print("Nouveau combat !")
+                                Egalite = False
+                                continue
+                            
                         # tant que le perdant tombe sur une case ou un autre joueur est déjà présent, le perdant est déplacé sur la case précédente
                         nouvelle_position_perdant = perdant.position - 1  # Nouvelle position après avoir perdu
                         while nouvelle_position_perdant >= 1 and plateau.cases[nouvelle_position_perdant - 1]["joueurs_sur_case"]:
                             # dire quel joueur est déjà présent sur la case si le joeur ne dessent pas en dessous de 1
-                            
                             print(f"Le joueur {plateau.cases[nouvelle_position_perdant - 1]['joueurs_sur_case'][0].nom} est déjà présent sur la case {nouvelle_position_perdant}. Le joueur {perdant.nom} est tombe sur la case {nouvelle_position_perdant - 1}.")
                             nouvelle_position_perdant -= 1
                         # Vérifie si la nouvelle position est inférieure à 1
                         if nouvelle_position_perdant < 1:
                             nouvelle_position_perdant = 1
                         plateau.deplacer_joueur(perdant, perdant.position, nouvelle_position_perdant)
-                        
+                                
             for joueur in joueurs:
                 plateau.mettre_a_jour_joueurs_sur_case(joueur, joueur.position)
 
