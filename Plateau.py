@@ -196,12 +196,3 @@ if __name__ == "__main__":
     print("\n------------------ Informations sur les joueurs ------------------")
     joueur1.afficher_info()
     joueur2.afficher_info()
-
-
-
-
-
-
-
-
-    
