@@ -1,11 +1,10 @@
 #-------------------------------------- IMPORTATIONS --------------------------------------#
 import pygame
 import random
+import json
 from Plateau import Plateau
 from Joueur import Joueur
 #------------------------------------------------------------------------------------------#
-
-
 
 pygame.init()
 
@@ -14,7 +13,7 @@ infoObject = pygame.display.Info()
 largeur_ecran, hauteur_ecran = infoObject.current_w, infoObject.current_h
 
 # Permettre de redimensionner la fenêtre
-taille_ajustee = 0.9
+taille_ajustee = 0.4
 
 # Définir la taille de la fenêtre en pourcentage de la taille de l'écran
 largeur_fenetre, hauteur_fenetre = int(largeur_ecran * taille_ajustee), int(hauteur_ecran * taille_ajustee)
@@ -39,19 +38,20 @@ images_des = [
 ]
 
 # Charger les images des personnages
-pirate_image = pygame.image.load('./images/pirate.png')
-pirate2_image = pygame.image.load('./images/pirate2.png')
-perroquet_image = pygame.image.load('./images/perroquet.png')
-aventurier_image = pygame.image.load('./images/aventurier.png')
+pirate_image = pygame.image.load('./images/Avatars/pirate.png')
+pirate2_image = pygame.image.load('./images/Avatars/pirate2.png')
+perroquet_image = pygame.image.load('./images/Avatars/perroquet.png')
+aventurier_image = pygame.image.load('./images/Avatars/aventurier.png')
 
 # Liste des images des personnages
 avatars = [pirate_image, pirate2_image, perroquet_image, aventurier_image]
 
+#--------------------------------------------------------- MAIN ---------------------------------------------------------#
 def main():
 
-    # Demandez le nombre de joueurs entre 1 et 4 en graphique avec les boutons
-
+    #--- Demandez le nombre de joueurs entre 1 et 4 en graphique avec les boutons ---#
     choix_nombre_joueurs = None
+    nombre_de_joueurs = None
 
     # Afficher 4 boutons pour choisir le nombre de joueurs (1, 2, 3 ou 4)
     while choix_nombre_joueurs is None:
@@ -59,19 +59,19 @@ def main():
         # Charger les images des boutons et les redimensionner
         button_width, button_height = int(largeur_fenetre * 0.20), int(hauteur_fenetre * 0.1)
 
-        bouton1 = pygame.image.load('./images/button2.png')
+        bouton1 = pygame.image.load('./images/Boutons/button2.png')
         bouton1.set_alpha(0)
         bouton1 = pygame.transform.scale(bouton1, (button_width, button_height))
 
-        bouton2 = pygame.image.load('./images/button2.png')
+        bouton2 = pygame.image.load('./images/Boutons/button2.png')
         bouton2.set_alpha(0)
         bouton2 = pygame.transform.scale(bouton2, (button_width, button_height))
 
-        bouton3 = pygame.image.load('./images/button2.png')
+        bouton3 = pygame.image.load('./images/Boutons/button2.png')
         bouton3.set_alpha(0)
         bouton3 = pygame.transform.scale(bouton3, (button_width, button_height))
 
-        bouton4 = pygame.image.load('./images/button2.png')
+        bouton4 = pygame.image.load('./images/Boutons/button2.png')
         bouton4.set_alpha(0)
         bouton4 = pygame.transform.scale(bouton4, (button_width, button_height))
 
@@ -113,7 +113,6 @@ def main():
         # Mettre à jour l'affichage
         pygame.display.update()
 
-        nombre_de_joueurs = None
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -132,23 +131,20 @@ def main():
                 elif bouton4_rect.collidepoint(event.pos):
                     nombre_de_joueurs = 4
 
-        
+        # Si un nombre de joueurs a été choisi, sortir de la boucle (et effacer les boutons)
         if nombre_de_joueurs is not None:
             screen.fill((0, 0, 0))
             break
 
-    print(f"Nombre de joueurs : {nombre_de_joueurs}")
-
+    # Créer les joueurs
     joueurs = []
-
     for i in range(nombre_de_joueurs):
         joueur = Joueur(f"Joueur {i + 1}", i + 1)
         joueurs.append(joueur)
 
-
-
     for joueur in joueurs:
-        # afficher le nom du joueur en graphique
+
+        # Afficher le nom du joueur
         font = pygame.font.SysFont("BlackBeard", largeur_fenetre // 32)
         text = font.render(f"{joueur.nom}, choisissez votre avatar", True, (255, 255, 255), (0, 0, 0)) 
         textRect = text.get_rect()
@@ -159,20 +155,20 @@ def main():
         # Charger les images des boutons et les redimensionner
         button_width, button_height = int(largeur_fenetre * 0.20), int(hauteur_fenetre * 0.1)
 
-        bouton1 = pygame.image.load('./images/button2.png')
-        # bouton1.set_alpha(0)
+        bouton1 = pygame.image.load('./images/Boutons/button2.png')
+        bouton1.set_alpha(0)
         bouton1 = pygame.transform.scale(bouton1, (button_width, button_height))
 
-        bouton2 = pygame.image.load('./images/button2.png')
-        # bouton2.set_alpha(0)
+        bouton2 = pygame.image.load('./images/Boutons/button2.png')
+        bouton2.set_alpha(0)
         bouton2 = pygame.transform.scale(bouton2, (button_width, button_height))
 
-        bouton3 = pygame.image.load('./images/button2.png')
-        # bouton3.set_alpha(0)
+        bouton3 = pygame.image.load('./images/Boutons/button2.png')
+        bouton3.set_alpha(0)
         bouton3 = pygame.transform.scale(bouton3, (button_width, button_height))
 
-        bouton4 = pygame.image.load('./images/button2.png')
-        # bouton4.set_alpha(0)
+        bouton4 = pygame.image.load('./images/Boutons/button2.png')
+        bouton4.set_alpha(0)
         bouton4 = pygame.transform.scale(bouton4, (button_width, button_height))
 
         # Créer les objets Rect pour représenter la position et la taille des boutons
@@ -191,9 +187,10 @@ def main():
         font = pygame.font.SysFont("BlackBeard", largeur_fenetre // 20)
 
         # Redimensionner les avatars
-        avatar_width = int(button_width * 0.8)  # Ajustez la taille selon vos besoins
-        avatar_height = int(button_height * 1.8)  # Ajustez la taille selon vos besoins
+        avatar_width = int(button_width * 0.8) 
+        avatar_height = int(button_height * 1.8) 
 
+        # Créer une liste des avatars redimensionnés
         avatars = [
             pygame.transform.scale(pirate_image, (avatar_width, avatar_height)),
             pygame.transform.scale(pirate2_image, (avatar_width, avatar_height)),
@@ -201,24 +198,24 @@ def main():
             pygame.transform.scale(aventurier_image, (avatar_width, avatar_height))
         ]
 
-
+        # Pour chaque bouton
         for i, bouton_rect in enumerate([bouton1_rect, bouton2_rect, bouton3_rect, bouton4_rect]):
             text = font.render(str(i + 1), True, (255, 255, 255))
             textRect = text.get_rect()
             textRect.center = bouton_rect.center
             screen.blit(text, textRect)
 
-            # Blitter (afficher) l'avatar sur le bouton
+            # Afficher l'avatar sur le bouton
             avatar_rect = avatars[i].get_rect()
             avatar_rect.center = bouton_rect.center
             screen.blit(avatars[i], avatar_rect)
 
-
+        # Mettre à jour l'affichage
         pygame.display.update()
-
 
         choix_avatar = None
 
+        # Tant que les avatar n'on pas été choisis
         while choix_avatar is None:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -226,26 +223,23 @@ def main():
                     quit()
                 elif event.type == pygame.MOUSEBUTTONDOWN:
                     x, y = event.pos
-                    
 
                     # Vérifier si le clic est sur un bouton
                     if bouton1_rect.collidepoint(event.pos):
                         avatar = pirate_image
-                        print("pirate")
                     elif bouton2_rect.collidepoint(event.pos):
                         avatar = pirate2_image
-                        print("pirate2")
                     elif bouton3_rect.collidepoint(event.pos):
                         avatar = perroquet_image
-                        print("perroquet")
                     elif bouton4_rect.collidepoint(event.pos):
                         avatar = aventurier_image
-                        print("aventurier")
                     
+                    # Attribution de l'avatar au joueur
                     joueur.photo = avatar
                     choix_avatar = True
-                    screen.fill((0, 0, 0))
 
+                    # Effacer les boutons
+                    screen.fill((0, 0, 0))
 
     # Créez le plateau
     plateau = Plateau(joueurs=joueurs)
@@ -254,20 +248,18 @@ def main():
     for joueur in joueurs:
         joueur.afficher_info()
 
-
-
     # Créer un dictionnaire des positions des cercles en fonction des cases
     positions_cercles = {
         "Case 1": (largeur_ecran * taille_ajustee * 0.111, hauteur_ecran * taille_ajustee* 0.9),
         "Case 2": (largeur_ecran * taille_ajustee * 0.2, hauteur_ecran * taille_ajustee * 0.9),
         "Case 3": (largeur_ecran * taille_ajustee * 0.29, hauteur_ecran * taille_ajustee * 0.89),
         "Case 4": (largeur_ecran * taille_ajustee * 0.355, hauteur_ecran * taille_ajustee * 0.815),
-        "Case 5": (largeur_ecran * taille_ajustee * 0.26, hauteur_ecran * taille_ajustee * 0.76),
+        "Case 5": (largeur_ecran * taille_ajustee * 0.262, hauteur_ecran * taille_ajustee * 0.76),
         "Case 6": (largeur_ecran * taille_ajustee * 0.235, hauteur_ecran * taille_ajustee * 0.515),
         "Case 7": (largeur_ecran * taille_ajustee * 0.088, hauteur_ecran * taille_ajustee * 0.44),
         "Case 8": (largeur_ecran * taille_ajustee * 0.147, hauteur_ecran * taille_ajustee * 0.34),
         "Case 9": (largeur_ecran * taille_ajustee * 0.075, hauteur_ecran * taille_ajustee * 0.25),
-        "Case 10": (largeur_ecran * taille_ajustee * 0.145, hauteur_ecran * taille_ajustee * 0.18),
+        "Case 10": (largeur_ecran * taille_ajustee * 0.1455, hauteur_ecran * taille_ajustee * 0.18),
         "Case 11": (largeur_ecran * taille_ajustee * 0.238, hauteur_ecran * taille_ajustee * 0.16),
         "Case 12": (largeur_ecran * taille_ajustee * 0.328, hauteur_ecran * taille_ajustee * 0.19),
         "Case 13": (largeur_ecran * taille_ajustee * 0.402, hauteur_ecran * taille_ajustee * 0.245),
@@ -293,33 +285,29 @@ def main():
     # Ajuster la taille des images des personnages en fonction de la taille des cases
     taille_personnage = int(largeur_fenetre * 0.08) 
 
-    # # Ajuster la position initiale des personnages
-    # position_pirate = (positions_cercles["Case 1"][0] - taille_personnage, positions_cercles["Case 1"][1] - taille_personnage)
-    # position_pirate2 = (positions_cercles["Case 1"][0] - taille_personnage, positions_cercles["Case 1"][1] - taille_personnage)
-    # position_perroquet = (positions_cercles["Case 1"][0] - taille_personnage, positions_cercles["Case 1"][1] - taille_personnage)
-    # position_aventurier = (positions_cercles["Case 1"][0] - taille_personnage, positions_cercles["Case 1"][1] - taille_personnage)
-
-    # Définir l'opacité (transparence) des cercles
-    opacité_cercles = 100  # 128 sur 255 correspond à 50 % d'opacité    
+    # Définir l'opacitédes cercles
+    opacité_cercles = 100  # (0 = transparent, 255 = opaque)
     taille_cercle = 0.025
 
+    # Boucle principale du jeu
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                return
+                pygame.quit()
+                quit()
             elif event.type == pygame.MOUSEBUTTONDOWN:
-                if event.button == 1:  # Vérifier si le clic est le clic gauche de la souris
+
+                # Vérifier si le clic est le clic gauche de la souris
+                if event.button == 1:  
+
                     # Obtenir les coordonnées du clic de souris
                     x, y = event.pos
 
                     # Parcourir les positions des cercles
                     for case, (cercle_x, cercle_y) in positions_cercles.items():
+
                         # Calculer la distance entre le clic et la position du cercle
                         distance = ((cercle_x - x) ** 2 + (cercle_y - y) ** 2) ** 0.5
-
-                        # Si la distance est inférieure à un seuil (la moitié de la taille du cercle), renvoyer la case
-                        if distance < largeur_ecran * taille_cercle * taille_ajustee:
-                            print(f"Case cliquée : {case}")
 
             # Afficher l'image du plateau
             screen.blit(plateau_image, (0, 0))
@@ -332,6 +320,8 @@ def main():
 
             # Afficher les images des personnages
             for joueur in joueurs:
+
+                # Redimensionner l'image du personnage
                 image_joueur = pygame.transform.scale(joueur.photo, (taille_personnage, taille_personnage))
 
                 # Calculer les coordonnées pour centrer l'image sur la case
@@ -345,10 +335,11 @@ def main():
             finJeu = False
             gagnants= []
 
-            print("---------------------- MAIN ----------------------\n")
+            # ------------------------------------ MAIN  ------------------------------------ #
+            # Tant que le jeu n'est pas fini
             while not finJeu:
 
-                # mettre à jour la fenêtre
+                # Mettre à jour la fenêtre
                 pygame.display.update()
 
                 # Affichez les informations des joueurs
@@ -356,22 +347,21 @@ def main():
                     joueur.afficher_info()
 
                 for joueur in joueurs:
-                    print(f"\nTour de {joueur.nom}") 
-
-                    # afficher le tour du joueur en graphique
+                    # Afficher le tour du joueur en haut de la fenêtre
                     font = pygame.font.SysFont("BlackBeard", largeur_fenetre // 32)
                     text = font.render(f"Tour de {joueur.nom}", True, (255, 255, 255), (0, 0, 0)) 
 
-                    # afficher le personnage du joueur en petit a coté de son nom
+                    # Afficher le personnage du joueur en petit a coté de son nom
                     screen.blit(pygame.transform.scale(joueur.photo, (taille_personnage // 2, taille_personnage // 2)), (text.get_width() * 3.6, 0))
                     textRect = text.get_rect()
 
-                    # centrer le texte en haut de la fenêtre (haut milieu)
+                    # Centrer le texte en haut de la fenêtre (haut milieu)
                     textRect.center = (largeur_fenetre // 2, hauteur_fenetre // 30)
                     screen.blit(text, textRect)
                     pygame.display.update()
 
-                    # Animation de lancer de dés
+                    # ------------------------ Animation de lancer de dés ------------------------ #
+
                     # Boucle pour afficher les images des faces du dé de manière aléatoire
                     reultat_lancer_des = 0
                     for i in range(25):
@@ -399,6 +389,7 @@ def main():
 
                     # Redimensionner l'image du dé
                     image_des = pygame.transform.scale(image_des, (int(image_des.get_width() * 0.5), int(image_des.get_height() * 0.5)))
+
                     # Supprimer l'image du dé	
                     screen.blit(plateau_image, (0, 0))
 
@@ -408,6 +399,7 @@ def main():
 
                     cases_disponible = []
 
+                    # Ajouter les cases disponibles dans la liste cases_disponible
                     for i in range(1, reultat_lancer_des + 1):
                         if i + joueur.position <= 30:
                             cases_disponible.append(i + joueur.position)
@@ -418,11 +410,13 @@ def main():
                         
                         # Vérifier si la case est dans cases_disponible
                         if int(case.split()[1]) in cases_disponible:
+
+                            # Dessiner un cercle rouge
                             pygame.draw.circle(surface_cercle, (255, 0, 0, opacité_cercles), (largeur_fenetre * taille_cercle, largeur_fenetre * taille_cercle), largeur_fenetre * taille_cercle)
                         
                         screen.blit(surface_cercle, (cercle_x - largeur_fenetre * taille_cercle, cercle_y - largeur_fenetre * taille_cercle))
                     
-                    # Réafficher les images des personnages autre que le joueur actuel
+                    # Réafficher les images des personnages autre que le joueur actuel (sinon ils ne sont pas affichés)
                     for joueur_autre in joueurs:
                         if joueur_autre != joueur:
                             image_joueur = pygame.transform.scale(joueur_autre.photo, (taille_personnage, taille_personnage))
@@ -434,25 +428,27 @@ def main():
 
                             # Afficher l'image centrée sur la case
                             screen.blit(image_joueur, (x_image, y_image))
-                    
+
+                    # Afficher l'image du personnage du joueur actuel
                     image_joueur = pygame.transform.scale(joueur.photo, (taille_personnage, taille_personnage))
                     x_case, y_case = positions_cercles[f"Case {joueur.position}"]
                     x_image = x_case - (taille_personnage // 2)
                     y_image = y_case - (taille_personnage // 2)
                     screen.blit(image_joueur, (x_image, y_image))
 
-                    # afficher le tour du joueur en graphique
+                    # Afficher le tour du joueur
                     font = pygame.font.SysFont("BlackBeard", largeur_fenetre // 32)
                     text = font.render(f"Tour de {joueur.nom}", True, (255, 255, 255), (0, 0, 0)) 
                     
-                    # afficher le personnage du joueur en petit a coté de son nom
+                    # Afficher le personnage du joueur en petit a coté de son nom
                     screen.blit(pygame.transform.scale(joueur.photo, (taille_personnage // 2, taille_personnage // 2)), (text.get_width() * 3.6, 0))
 
-                    # centrer le texte en haut de la fenêtre (haut milieu)
+                    # Centrer le texte en haut de la fenêtre (haut milieu)
                     textRect = text.get_rect()
                     textRect.center = (largeur_fenetre // 2, hauteur_fenetre // 30)
                     screen.blit(text, textRect)
 
+                    # Mettre à jour l'affichage
                     pygame.display.update()
                     
                     deplacement = None
@@ -470,47 +466,48 @@ def main():
                                 for case, (cercle_x, cercle_y) in positions_cercles.items():
                                     distance = ((cercle_x - x) ** 2 + (cercle_y - y) ** 2) ** 0.5
 
+                                    # Si la distance est inférieure à un seuil (la moitié de la taille du cercle), renvoyer la case
                                     if int(case.split()[1]) in cases_disponible and distance < largeur_ecran * taille_cercle * taille_ajustee:
                                         choix_case = int(case.split()[1])
                                         deplacement = choix_case
-                                        print(f"Case cliquée : {case}")  
                                         break
-                        
+
+                        # Si le joueur a cliqué sur une case disponible, sortir de la boucle
                         if deplacement is not None:
                             break
 
                     ancienne_position = joueur.position
 
-                    print(f"ancienne position: {ancienne_position}")
-                    print(f"deplacement: {deplacement}")
 
                     for i in range(ancienne_position, deplacement):
-                        print(plateau.cases[i]["description"])
 
+                        # Si la case est une case monstre
                         if plateau.cases[i]["description"] == "Monstre":
-                            case_monstre = i + 1
-                            print(case_monstre)
 
-                            print(f"Combat entre {joueur.nom} et le monstre")
+                            # On récupère la case
+                            case_monstre = i + 1
+
                             Egalite = True
 
+                            # Tant que le joueur n'a pas gagné ou perdu
                             while Egalite:
 
                                 # Animation de lancer de dés 
                                 font = pygame.font.SysFont("BlackBeard", largeur_fenetre // 32)
 
-                                # afficher le nom du joeuur au dessus des dés
+                                # Afficher le nom du joeuur au dessus des dés
                                 text = font.render(f"{joueur.nom}", True, (255, 255, 255), (0, 0, 0)) 
                                 textRect = text.get_rect()
                                 textRect = (largeur_fenetre * 0.12 , hauteur_fenetre * 0.3)
                                 screen.blit(text, textRect)
 
-                                # afficher le monstre au dessus des dés
+                                # Afficher le monstre au dessus des dés
                                 text = font.render("Monstre", True, (255, 255, 255), (0, 0, 0)) 
                                 textRect = text.get_rect()
                                 textRect = (largeur_fenetre* 0.8 , hauteur_fenetre * 0.3)
                                 screen.blit(text, textRect)
 
+                                # Initialisation des dés
                                 de1_monstre = 0
                                 de2_monstre = 0
                                 de1_joueur = 0
@@ -518,6 +515,7 @@ def main():
                                 
                                 # Boucle pour afficher les images des faces du dé de manière aléatoire
                                 for i in range(25):
+
                                     # Afficher une image aléatoire du dé
                                     de1_monstre = random.randint(1, 6)
                                     de2_monstre = random.randint(1, 6)
@@ -559,13 +557,14 @@ def main():
                                 image1_des_monstre = pygame.transform.scale(image1_des_monstre, (int(image1_des_monstre.get_width() * 0.5 * taille_ajustee), int(image1_des_monstre.get_height() * 0.5 * taille_ajustee)))
                                 image2_des_monstre = pygame.transform.scale(image2_des_monstre, (int(image2_des_monstre.get_width() * 0.5 * taille_ajustee), int(image2_des_monstre.get_height() * 0.5 * taille_ajustee)))
 
-                                # Afficher l'image des dés
+                                # Afficher les images des dés
                                 screen.blit(image1_des_joueur, (largeur_fenetre / 6 - image1_des_joueur.get_width() / 2, hauteur_fenetre / 2 - image1_des_joueur.get_height() / 2))
                                 screen.blit(image2_des_joueur, (largeur_fenetre / 6 - image2_des_joueur.get_width() / 2, hauteur_fenetre / 2 + image2_des_joueur.get_height() / 2))
 
                                 screen.blit(image1_des_monstre, (largeur_fenetre / 1.2 - image1_des_monstre.get_width() / 2, hauteur_fenetre / 2 - image1_des_monstre.get_height() / 2))
                                 screen.blit(image2_des_monstre, (largeur_fenetre / 1.2 - image2_des_monstre.get_width() / 2, hauteur_fenetre / 2 + image2_des_monstre.get_height() / 2))
 
+                                # Récupérer les résultat du combat
                                 resultat_monstre = de1_monstre + de2_monstre
                                 resultat_joueur = de1_joueur + de2_joueur
 
@@ -584,26 +583,20 @@ def main():
                                 pygame.display.update()
                                 pygame.time.wait(2000)
 
-                                print(f"Résultat de {joueur.nom}: {resultat_joueur}")
-                                print(f"Résultat du monstre: {resultat_monstre}")
-
                                 if resultat_joueur > resultat_monstre:
-                                    print(f"{joueur.nom} a gagné le combat !")
                                     Egalite = False
                                     break
 
                                 elif resultat_joueur < resultat_monstre:
-                                    print(f"{joueur.nom} a perdu le combat !")
                                     Egalite = False  
                                     deplacement = case_monstre -1
                                     break                    
 
-                                else:
-                                    print("Egalité !")
-                                    print("Nouveau combat !")
                     
+                    # Déplacer le joueur
                     plateau.deplacer_joueur(joueur, ancienne_position, deplacement)
 
+                    # Si le joueur est sur la case 30, il a gagné
                     if joueur.position >= 30:
                         gagnants.append(joueur)
                         finJeu = True
@@ -611,19 +604,22 @@ def main():
                     
                     nouvelle_position_perdant = None
 
+                    # On parcourt tous les joueurs
                     for i in range(len(joueurs)):
                         for j in range(i + 1, len(joueurs)):
+
+                            # Si deux joueurs sont sur la même case
                             if joueurs[i].position == joueurs[j].position:
 
+                                # Si les deux joueurs sont sur la case 1, on ne fait rien
                                 if joueurs[i].position != 1 and joueurs[j].position != 1:    
                                     
-                                    print(f"Combat entre {joueurs[i].nom} et {joueurs[j].nom}")
-
                                     Egalite = True
-
+                                    
+                                    # Tant que les deux joueurs font égalité
                                     while Egalite:
 
-                                        # supprimer les rectangles noir en dessinant le plateau
+                                        # Supprimer les dés
                                         screen.blit(plateau_image, (0, 0))
 
                                         # Reafficher les personnages
@@ -634,27 +630,30 @@ def main():
                                             y_image = y_case - (taille_personnage // 2)
                                             screen.blit(image_joueur, (x_image, y_image))
                                     
+                                        # Mettre à jour l'affichage
                                         pygame.display.update()
 
-                                        # Animation de lancer de dés 
                                         font = pygame.font.SysFont("BlackBeard", largeur_fenetre // 32)
 
-                                        # afficher le nom du joeuur au dessus des dés
+                                        # Afficher le nom du joeuur au dessus des dés
                                         text = font.render(f"{joueurs[i].nom}", True, (255, 255, 255), (0, 0, 0)) 
                                         textRect = text.get_rect()
                                         textRect = (largeur_fenetre * 0.12 , hauteur_fenetre * 0.3)
                                         screen.blit(text, textRect)
 
-                                        # afficher le monstre au dessus des dés
+                                        # Afficher "Monstre" au dessus des dés
                                         text = font.render(f"{joueurs[j].nom}", True, (255, 255, 255), (0, 0, 0)) 
                                         textRect = text.get_rect()
                                         textRect = (largeur_fenetre* 0.8 , hauteur_fenetre * 0.3)
                                         screen.blit(text, textRect)
 
+                                        # Initialisation des dés
                                         de1: int = 0
                                         de2: int = 0
 
+                                        # Boucle pour afficher les images des faces du dé de manière aléatoire
                                         for a in range(25):
+
                                             # Afficher une image aléatoire du dé
                                             de1 = joueurs[i].lancer_de_des()
                                             de2 = joueurs[j].lancer_de_des()
@@ -667,11 +666,13 @@ def main():
                                             screen.blit(image1_des_joueur, (largeur_fenetre / 1.2 - image1_des_joueur.get_width() / 2, hauteur_fenetre / 2 - image1_des_joueur.get_height() / 2))
                                             screen.blit(image2_des_joueur, (largeur_fenetre / 6 - image2_des_joueur.get_width() / 2, hauteur_fenetre / 2 - image2_des_joueur.get_height() / 2))
 
+                                            # Mettre à jour l'affichage
                                             pygame.display.update()
 
-                                            # Attendre un court instant avant d'afficher la prochaine image
+                                            # Attendre un court instant (70 millisecondes) avant d'afficher la prochaine image 
                                             pygame.time.wait(70)
                                        
+                                        # Afficher une image aléatoire du dé
                                         image1_des_joueur = images_des[de1 -1]
                                         image2_des_joueur = images_des[de2 -1]
 
@@ -683,6 +684,7 @@ def main():
 
                                         font = pygame.font.SysFont("BlackBeard", largeur_fenetre // 15)
 
+                                        # Afficher les résultats des dés en dessous de ses derniers
                                         text = font.render(f"{de2}", True, (255, 255, 255), (0, 0, 0))
                                         textRect = text.get_rect()
                                         textRect = (largeur_fenetre * 0.835 , hauteur_fenetre * 0.675)
@@ -693,39 +695,37 @@ def main():
                                         textRect = (largeur_fenetre * 0.15 , hauteur_fenetre * 0.675)
                                         screen.blit(text, textRect)
 
+                                        # Mettre à jour l'affichage et attendre 2 secondes
                                         pygame.display.update()
                                         pygame.time.wait(2000)
 
-                                        print(f"Résultat de {joueurs[i].nom}: {de1}")
-                                        print(f"Résultat de {joueurs[j].nom}: {de2}")
-
+                                        # Si le joueur 1 a un plus grand nombre que le joueur 2, le joueur 1 gagne
                                         if de1 > de2:
-                                            gagnant = joueurs[i]
                                             perdant = joueurs[j]
-                                            print(f"{joueurs[i].nom} a gagné le combat !")
                                             Egalite = False
                                         
+                                        # Si le joueur 2 a un plus grand nombre que le joueur 1, le joueur 2 gagne
                                         elif de1 < de2:
-                                            gagnant = joueurs[j]
                                             perdant = joueurs[i]
-                                            print(f"{joueurs[j].nom} a gagné le combat !")
                                             Egalite = False
 
-                                        else:
-                                            print("Égalité !")
-                                            print("Nouveau combat !")
-                                            
-                                    # tant que le perdant tombe sur une case ou un autre joueur est déjà présent, le perdant est déplacé sur la case précédente
-                                    nouvelle_position_perdant = perdant.position - 1  # Nouvelle position après avoir perdu
+                                    #--- Tant que le perdant tombe sur une case ou un autre joueur est déjà présent, le perdant est déplacé sur la case précédente ---#
+
+                                    # Nouvelle position après avoir perdu
+                                    nouvelle_position_perdant = perdant.position - 1  
+
                                     while nouvelle_position_perdant >= 1 and plateau.cases[nouvelle_position_perdant - 1]["joueurs_sur_case"]:
                                         # dire quel joueur est déjà présent sur la case si le joeur ne dessent pas en dessous de 1
-                                        print(f"Le joueur {plateau.cases[nouvelle_position_perdant - 1]['joueurs_sur_case'][0].nom} est déjà présent sur la case {nouvelle_position_perdant}. Le joueur {perdant.nom} est tombe sur la case {nouvelle_position_perdant - 1}.")
                                         nouvelle_position_perdant -= 1
+
                                     # Vérifie si la nouvelle position est inférieure à 1
                                     if nouvelle_position_perdant < 1:
                                         nouvelle_position_perdant = 1
+
+                                    # Déplacer le perdant sur la nouvelle position
                                     plateau.deplacer_joueur(perdant, perdant.position, nouvelle_position_perdant)
-                                                        
+
+                        # Mettre à jour la position des joueurs sur le plateau      
                         for joueur in joueurs:
                             plateau.mettre_a_jour_joueurs_sur_case(joueur, joueur.position)   
 
@@ -733,9 +733,10 @@ def main():
                     screen.fill((0, 0, 0))
                     screen.blit(plateau_image, (0, 0))
                     
+                    # Pour chaque joueur, afficher son image sur la case
                     for joueur in joueurs:
                         plateau.mettre_a_jour_joueurs_sur_case(joueur, joueur.position)
-                        # deplacer l'image du joueur sur la case
+
                         # Charger l'image du joueur
                         image_joueur = pygame.transform.scale(joueur.photo, (taille_personnage, taille_personnage))
 
@@ -753,31 +754,43 @@ def main():
                     # Pause de 1 secondes
                     pygame.time.wait(1000)
 
-                    print("----------")
-                    print("Position actuelle des joueurs: ", end="")
-                    for joueur in joueurs:
-                        print(f"{joueur.nom}: {joueur.position}", end=" ")
-                    print("----------")
-
-
-                    
             
-            print("---------------------- FIN ----------------------")
+            #---------------------------------------------------------- FIN DU JEU ----------------------------------------------------------#
             # Afficher le gagnant sur fond noir
             screen.fill((0, 0, 0))
             font = pygame.font.SysFont("BlackBeard", largeur_fenetre // 20)
-            text = font.render(f"{gagnants[0].nom} a TROUVÉ LE TRESOR !", True, (255, 255, 255), (0, 0, 0))
+            text = font.render(f"{gagnants[0].nom} à TROUVÉ LE TRESOR !", True, (255, 255, 255), (0, 0, 0))
             textRect = text.get_rect()
             textRect.center = (largeur_fenetre // 2, hauteur_fenetre // 2)
             screen.blit(text, textRect)
             pygame.display.update()
-            pygame.time.wait(6000)
-            pygame.quit()
-            
-            print(f"{gagnants[0].nom} a TROUVÉ LE TRESOR !.")
+            pygame.time.wait(4000)
 
+            # Afficher un bouton pour quitter le jeu et revenir au menu
+            font = pygame.font.SysFont("BlackBeard", largeur_fenetre // 20)
+            text = font.render("Retour au menu", True, (255, 255, 255), (0, 0, 0))
+            textRect = text.get_rect()
+            textRect.center = (largeur_fenetre // 2, int((hauteur_fenetre // 2) * 1.5))
+            screen.blit(text, textRect)
+            pygame.display.update()
 
+            retour_menu = False
+            # Attendre que le joueur clique sur le bouton
+            while not retour_menu:
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        pygame.quit()
+                        quit()
 
+                    if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                        x, y = event.pos
 
+                        # Vérifier si le clic est sur le bouton
+                        if textRect.collidepoint(x, y):
+
+                            # Quitter le jeu et revenir au menu
+                            pygame.quit()
+                            quit()
+        
 if __name__ == '__main__':
     main()
