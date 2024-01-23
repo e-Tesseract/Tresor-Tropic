@@ -1,4 +1,4 @@
-﻿# Wiki du Jeu “Tresor Tropic” réalisé par Hugo Capon
+# Wiki du Jeu “Tresor Tropic” réalisé par Hugo Capon
 
 ## Table des matières
 
