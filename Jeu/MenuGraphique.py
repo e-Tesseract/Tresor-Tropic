@@ -1,6 +1,8 @@
+#-------------------------------------- IMPORTATIONS --------------------------------------#
 import pygame
 from MainGraphique import main
 import subprocess
+#------------------------------------------------------------------------------------------#
 
 # Initialiser Pygame
 pygame.init()
