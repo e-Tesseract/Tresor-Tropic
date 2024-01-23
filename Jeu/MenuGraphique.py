@@ -11,7 +11,6 @@ pygame.init()
 infoObject = pygame.display.Info()
 largeur_ecran, hauteur_ecran = infoObject.current_w, infoObject.current_h
 
-
 # Définir les dimensions de la fenêtre
 largeur_fenetre, hauteur_fenetre = int(largeur_ecran ), int(hauteur_ecran )
 
