@@ -40,30 +40,48 @@ def main_menu():
     quit_button_image = pygame.image.load('./images/Boutons/button_rect.png')
     quit_button_image = pygame.transform.scale(quit_button_image, (button_width, button_height))
 
+    stats_button_image = pygame.image.load('./images/Boutons/button_rect.png')
+    stats_button_image = pygame.transform.scale(stats_button_image, (button_width, button_height))
+
+    multipleur_button_image = pygame.image.load('./images/Boutons/button_rect.png')
+    multipleur_button_image = pygame.transform.scale(multipleur_button_image, (button_width, button_height))
+
     # Créer les objets Rect pour représenter la position et la taille des boutons
     play_button_rect = play_button_image.get_rect()
-    play_button_rect.center = (int(largeur_fenetre // 2), int((hauteur_fenetre // 2) * 0.65))
+    play_button_rect.center = (int(largeur_fenetre // 2), int((hauteur_fenetre // 2) * 0.30))
 
     save_button_rect = save_button_image.get_rect()
-    save_button_rect.center = (int(largeur_fenetre // 2), int(hauteur_fenetre // 2))
+    save_button_rect.center = (int(largeur_fenetre // 2), int(hauteur_fenetre // 2 * 0.65))
 
     quit_button_rect = quit_button_image.get_rect()
-    quit_button_rect.center = (int(largeur_fenetre // 2), int((hauteur_fenetre // 2) * 1.35))
+    quit_button_rect.center = (int(largeur_fenetre // 2), int((hauteur_fenetre // 2)))
+
+    stats_button_rect = stats_button_image.get_rect()
+    stats_button_rect.center = (int(largeur_fenetre // 2), int((hauteur_fenetre // 2) * 1.35))
+
+    multipleur_button_rect = multipleur_button_image.get_rect()
+    multipleur_button_rect.center = (int(largeur_fenetre // 2), int((hauteur_fenetre // 2) * 1.70))
 
     # Créer les surfaces de texte pour les boutons
     font = pygame.font.Font("./images/BlackBeard/BlackBeard.otf", int(largeur_fenetre // 30))
     play_button_text = font.render('Jouer', True, black)
     save_button_text = font.render('Reprendre partie', True, black)
     quit_button_text = font.render('Quitter', True, black)
+    stats_button_text = font.render('Statistique', True, black)
+    multipleur_button_text = font.render('Multipleur', True, black)
 
     play_button_text_rect = play_button_text.get_rect()
     save_button_text_rect = save_button_text.get_rect()
     quit_button_text_rect = quit_button_text.get_rect()
+    stats_button_text_rect = stats_button_text.get_rect()
+    multipleur_button_text_rect = multipleur_button_text.get_rect()
 
     # Centrez le texte sur les boutons
     play_button_text_rect.center = play_button_rect.center
     save_button_text_rect.center = save_button_rect.center
     quit_button_text_rect.center = quit_button_rect.center
+    stats_button_text_rect.center = stats_button_rect.center
+    multipleur_button_text_rect.center = multipleur_button_rect.center
 
     # Boucle principale
     while True:
@@ -82,6 +100,11 @@ def main_menu():
                 elif quit_button_rect.collidepoint(event.pos):
                     pygame.quit()
                     quit()
+                elif stats_button_rect.collidepoint(event.pos):
+                    pass
+                elif multipleur_button_rect.collidepoint(event.pos):
+                    pass
+                 # tu met ton code ici
 
         screen.blit(background_image, (0, 0))
 
@@ -90,11 +113,15 @@ def main_menu():
         screen.blit(play_button_image, play_button_rect)
         screen.blit(save_button_image, save_button_rect)
         screen.blit(quit_button_image, quit_button_rect)
+        screen.blit(stats_button_image, stats_button_rect)
+        screen.blit(multipleur_button_image, multipleur_button_rect)
 
         # Dessiner les surfaces de texte centrées sur les boutons
         screen.blit(play_button_text, play_button_text_rect)
         screen.blit(save_button_text, save_button_text_rect)
         screen.blit(quit_button_text, quit_button_text_rect)
+        screen.blit(stats_button_text, stats_button_text_rect)
+        screen.blit(multipleur_button_text, multipleur_button_text_rect)
 
         # Rafraîchir l'écran
         pygame.display.flip()
