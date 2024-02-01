@@ -4,6 +4,7 @@ import random
 import json
 from Plateau import Plateau
 from Joueur import Joueur
+from MenuPopUp import menu_popup
 #------------------------------------------------------------------------------------------#
 
 pygame.init()
@@ -13,7 +14,7 @@ infoObject = pygame.display.Info()
 largeur_ecran, hauteur_ecran = infoObject.current_w, infoObject.current_h
 
 # Permettre de redimensionner la fenêtre 
-taille_ajustee =1
+taille_ajustee =0.7
 
 # Définir la taille de la fenêtre en pourcentage de la taille de l'écran
 largeur_fenetre, hauteur_fenetre = int(largeur_ecran * taille_ajustee), int(hauteur_ecran * taille_ajustee)
@@ -61,6 +62,10 @@ avatar_to_image = {
 # Liste des images des personnages
 avatars = [pirate_image, pirate2_image, perroquet_image, aventurier_image]
 
+def pause_menu(screen):
+    menu_popup(screen)
+    pygame.event.clear(pygame.KEYDOWN)  
+    
 
 #--------------------------------------------------------- MAIN ---------------------------------------------------------#
 def main(reprendre=False):
@@ -69,7 +74,7 @@ def main(reprendre=False):
 
     if not reprendre:
             
-        #--- Demandez le nombre de joueurs entre 1 et 4 avec les boutons ---#
+        #--- Demander le nombre de joueurs entre 1 et 4 avec les boutons ---#
         choix_nombre_joueurs = None
         nombre_de_joueurs = None
 
@@ -349,17 +354,14 @@ def main(reprendre=False):
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
-            elif event.type == pygame.MOUSEBUTTONDOWN:
 
+            elif event.type == pygame.MOUSEBUTTONDOWN:
                 # Vérifier si le clic est le clic gauche de la souris
                 if event.button == 1:  
-
                     # Obtenir les coordonnées du clic de souris
                     x, y = event.pos
-
                     # Parcourir les positions des cercles
                     for case, (cercle_x, cercle_y) in positions_cercles.items():
-
                         # Calculer la distance entre le clic et la position du cercle
                         distance = ((cercle_x - x) ** 2 + (cercle_y - y) ** 2) ** 0.5
 
@@ -507,13 +509,33 @@ def main(reprendre=False):
                     
                     deplacement = None
 
+                    menu_visible = False
+
                     # Attendre que le joueur clique sur une case disponible
                     while True:
                         for event in pygame.event.get():
                             if event.type == pygame.QUIT:
                                 pygame.quit()
                                 quit()
-                            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                            
+                            # Vérifier si le joueur a appuyé sur echap
+                            elif event.type == pygame.KEYDOWN:
+                                if event.key == pygame.K_ESCAPE:
+                                    print("Echap")
+                                    menu_visible = True
+                                    if menu_visible:
+                                        option_selection = menu_popup(screen)
+                                        if option_selection == "Reprendre":
+                                            print("Reprendre MainGraphique")
+                                            menu_visible = False  
+                                        elif option_selection == "Sauvegarder":
+                                            print("Sauvegarder MainGraphique")
+                                        elif option_selection == "Quitter":
+                                            print("Quitter MainGraphique")
+                                            pygame.quit()
+                                            quit()
+
+                            elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                                 x, y = event.pos
 
                                 # On vérifie si le clic est sur une case disponible
@@ -531,6 +553,8 @@ def main(reprendre=False):
                             break
 
                     ancienne_position = joueur.position
+
+
 
                     for i in range(ancienne_position, deplacement):
 
@@ -648,6 +672,49 @@ def main(reprendre=False):
                     
                     # Déplacer le joueur
                     plateau.deplacer_joueur(joueur, ancienne_position, deplacement)
+
+                    
+                    # Si le joueur est sur une case Relancer, un dé est relancé
+                    if plateau.cases[joueur.position - 1]["description"] == "Relancer":
+
+                        # Boucle pour afficher les images des faces du dé de manière aléatoire
+                        reultat_lancer_des = 0
+                        for i in range(25):
+                            # Afficher une image aléatoire du dé
+                            reultat_lancer_des = random.randint(1, 6)
+                            image_des = images_des[reultat_lancer_des -1]
+                            image_des = pygame.transform.scale(image_des, (int(image_des.get_width() * 0.8 * taille_ajustee), int(image_des.get_height() * 0.8 * taille_ajustee)))
+                            screen.blit(image_des, (largeur_fenetre / 2 - image_des.get_width() / 2, hauteur_fenetre / 2 - image_des.get_height() / 2))
+                            pygame.display.update()
+
+                            # Attendre un court instant avant d'afficher la prochaine image
+                            pygame.time.wait(70)
+
+                        # Afficher une image aléatoire du dé 
+                        image_des = images_des[reultat_lancer_des -1]
+                        image_des = pygame.transform.scale(image_des, (int(image_des.get_width() * 0.8 * taille_ajustee), int(image_des.get_height() * 0.8 * taille_ajustee)))
+
+                        # Afficher l'image du dé
+                        screen.blit(image_des, (largeur_fenetre / 2 - image_des.get_width() / 2, hauteur_fenetre / 2 - image_des.get_height() / 2))
+                        pygame.display.update()
+                        pygame.time.wait(1000)
+
+                        # Supprimer l'image du dé	
+                        screen.fill((0, 0, 0))
+
+                        # Redimensionner l'image du dé
+                        image_des = pygame.transform.scale(image_des, (int(image_des.get_width() * 0.5), int(image_des.get_height() * 0.5)))
+
+                        # Supprimer l'image du dé	
+                        screen.blit(plateau_image, (0, 0))
+
+                        # Redimensionner l'image du dé
+                        image_des = pygame.transform.scale(image_des, (int(image_des.get_width() * 0.5), int(image_des.get_height() * 0.5)))
+
+                        deplacement = reultat_lancer_des
+                        joueur.position += deplacement
+
+                    
 
                     # Si le joueur est sur la case 30, il a gagné
                     if joueur.position >= 30:

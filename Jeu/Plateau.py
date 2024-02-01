@@ -18,12 +18,17 @@ class Plateau:
             self.cases.append(case)
 
         # Ajout des cases spéciales
+            
+        ### Monstres ###
+            
         # Case 6
         self.cases[5]["description"] = "Monstre" 
         # Case 25
         self.cases[24]["description"] = "Monstre"
         # Case 30
         self.cases[29]["description"] = "Monstre"
+
+        ### Trésors ###
 
         # Case 5
         self.cases[4]["description"] = "\033[92mEchelle\033[0m"
@@ -37,6 +42,11 @@ class Plateau:
         self.cases[25]["description"] = "\033[92mEchelle\033[0m"
         # Case 29
         self.cases[28]["description"] = "\033[92mEchelle\033[0m"
+
+        ### Rejouer ###
+
+        # Case 10
+        self.cases[9]["description"] = "Relancer"
 
         for joueur in joueurs:
             self.cases[joueur.position - 1]["joueurs_sur_case"].append(joueur)
@@ -176,7 +186,9 @@ class Plateau:
         
         return gagnant
     
-
+    def relancer(self, joueur, lancer):
+        # Deplacer le joueur sur le plateau
+        joueur.position += lancer
 
     
 if __name__ == "__main__":

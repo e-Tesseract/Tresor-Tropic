@@ -73,6 +73,14 @@ while not finJeu:
 
         deplacement = choix_case
         ancienne_position = joueur.position
+
+        # Si la case est un relancer
+        if plateau.cases[deplacement - 1]["description"] == "Relancer":
+            print("Relancer !")
+            deplacement += joueur.lancer_de_des()
+            print("Résultat du lancer de dés du Joueur: ", deplacement)
+
+        
        
         for i in range(ancienne_position, deplacement):
             print(plateau.cases[i]["description"])
