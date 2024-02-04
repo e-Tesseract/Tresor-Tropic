@@ -256,25 +256,31 @@ def main(reprendre=False):
                         quit()
                     elif event.type == pygame.MOUSEBUTTONDOWN:
                         x, y = event.pos
+                        avatar_selection = False
 
                         # Vérifier si le clic est sur un bouton
                         if bouton1_rect.collidepoint(event.pos):
                             avatar = pirate_image
+                            avatar_selection = True
                         elif bouton2_rect.collidepoint(event.pos):
                             avatar = pirate2_image
+                            avatar_selection = True
                         elif bouton3_rect.collidepoint(event.pos):
                             avatar = perroquet_image
+                            avatar_selection = True
                         elif bouton4_rect.collidepoint(event.pos):
                             avatar = aventurier_image
-                        
-                        # Attribution de l'avatar au joueur
-                        joueur.photo = avatar
-                        joueur.nomPhoto = avatar_to_variable.get(avatar, "Inconnu")
+                            avatar_selection = True
 
-                        choix_avatar = True
+                        if avatar_selection:
+                            # Attribution de l'avatar au joueur
+                            joueur.photo = avatar
+                            joueur.nomPhoto = avatar_to_variable.get(avatar, "Inconnu")
+                            choix_avatar = True
 
-                        # Effacer les boutons
-                        screen.fill((0, 0, 0))
+                            # Effacer les boutons
+                            screen.fill((0, 0, 0))
+                            break
 
         # Créez le plateau
         plateau = Plateau(joueurs=joueurs)
@@ -714,7 +720,8 @@ def main(reprendre=False):
                         deplacement = reultat_lancer_des
                         joueur.position += deplacement
 
-                    
+                        
+
 
                     # Si le joueur est sur la case 30, il a gagné
                     if joueur.position >= 30:
