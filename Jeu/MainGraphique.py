@@ -4,7 +4,7 @@ import random
 import json
 from Plateau import Plateau
 from Joueur import Joueur
-from MenuPopUp import menu_popup
+"from MenuPopUp import menu_popup"
 #------------------------------------------------------------------------------------------#
 
 pygame.init()
