@@ -2,6 +2,7 @@
 import pygame
 from MainGraphique import main
 import subprocess
+from database import init_bdd
 #------------------------------------------------------------------------------------------#
 
 # Initialiser Pygame
@@ -21,6 +22,11 @@ screen = pygame.display.set_mode((largeur_ecran, hauteur_ecran))
 white = (255, 255, 255)
 black = (0, 0, 0)
 
+bdd = init_bdd()
+
+curseur = bdd.connexion.cursor()
+curseur.execute("INSERT INTO partie VALUES (4);")
+bdd.connexion.commit()
 
 def main_menu():
     

@@ -2,10 +2,14 @@
 import pygame
 import random
 import json
+import sys
+import psycopg2
 from Plateau import Plateau
 from Joueur import Joueur
+from database import  init_bdd
 "from MenuPopUp import menu_popup"
 #------------------------------------------------------------------------------------------#
+
 
 pygame.init()
 
@@ -61,14 +65,18 @@ avatar_to_image = {
 
 # Liste des images des personnages
 avatars = [pirate_image, pirate2_image, perroquet_image, aventurier_image]
-
-def pause_menu(screen):
-    menu_popup(screen)
-    pygame.event.clear(pygame.KEYDOWN)  
     
 
 #--------------------------------------------------------- MAIN ---------------------------------------------------------#
 def main(reprendre=False):
+
+
+    bdd = init_bdd()
+
+    curseur = bdd.connexion.cursor()
+    curseur.execute("INSERT INTO partie VALUES (6);")
+    bdd.connexion.commit()
+
 
     tour_actuel = 1
 
@@ -525,21 +533,6 @@ def main(reprendre=False):
                                 quit()
                             
                             # Vérifier si le joueur a appuyé sur echap
-                            elif event.type == pygame.KEYDOWN:
-                                if event.key == pygame.K_ESCAPE:
-                                    print("Echap")
-                                    menu_visible = True
-                                    if menu_visible:
-                                        option_selection = menu_popup(screen)
-                                        if option_selection == "Reprendre":
-                                            print("Reprendre MainGraphique")
-                                            menu_visible = False  
-                                        elif option_selection == "Sauvegarder":
-                                            print("Sauvegarder MainGraphique")
-                                        elif option_selection == "Quitter":
-                                            print("Quitter MainGraphique")
-                                            pygame.quit()
-                                            quit()
 
                             elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                                 x, y = event.pos
