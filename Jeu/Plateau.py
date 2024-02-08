@@ -120,6 +120,26 @@ class Plateau:
         # On ajoute le joueur à la case
         self.cases[joueur.position - 1]["joueurs_sur_case"].append(joueur)
 
+
+    def echanger_joueurs(self, joueur1: Joueur, joueur2: Joueur) -> None:
+        """
+        Echange les positions de deux joueurs.
+
+        Args:
+            joueur1 (Joueur): Le premier joueur.
+            joueur2 (Joueur): Le deuxième joueur.
+
+        Returns:
+            None
+        """
+
+        # Echange les positions des joueurs
+        joueur1.position, joueur2.position = joueur2.position, joueur1.position
+
+        # Met à jour les joueurs sur les cases
+        self.mettre_a_jour_joueurs_sur_case(joueur1, joueur1.position)
+        self.mettre_a_jour_joueurs_sur_case(joueur2, joueur2.position)
+
         
 
     def mettre_a_jour_joueurs_sur_case(self, joueur: Joueur, numero_case: int) -> None: 

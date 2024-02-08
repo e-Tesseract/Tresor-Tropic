@@ -563,6 +563,7 @@ def main(reprendre=False):
 
 
 
+
                     for i in range(ancienne_position, deplacement):
 
                         # Si la case est une case monstre
@@ -680,49 +681,62 @@ def main(reprendre=False):
                     # Déplacer le joueur
                     plateau.deplacer_joueur(joueur, ancienne_position, deplacement)
 
-                    
                     # Si le joueur est sur une case Relancer, un dé est relancé
                     if plateau.cases[joueur.position - 1]["description"] == "Speciale":
 
-                        # Boucle pour afficher les images des faces du dé de manière aléatoire
-                        reultat_lancer_des = 0
-                        for i in range(25):
-                            # Afficher une image aléatoire du dé
-                            reultat_lancer_des = random.randint(1, 6)
+                        # On choisi une carte au hasard parmi les cartes spéciales
+
+                        if nombre_de_joueurs == 1:
+                            carte_speciale = random.choice(["Relancer"])
+                        else:
+                            carte_speciale = random.choice(["Relancer", "Echanger_Joueur", "Faire_Reculer"])
+
+                        # Si la carte est une carte Relancer
+                        if carte_speciale == "Relancer":
+
+                            # Boucle pour afficher les images des faces du dé de manière aléatoire
+                            reultat_lancer_des = 0
+                            for i in range(25):
+                                # Afficher une image aléatoire du dé
+                                reultat_lancer_des = random.randint(1, 6)
+                                image_des = images_des[reultat_lancer_des -1]
+                                image_des = pygame.transform.scale(image_des, (int(image_des.get_width() * 0.8 * taille_ajustee), int(image_des.get_height() * 0.8 * taille_ajustee)))
+                                screen.blit(image_des, (largeur_fenetre / 2 - image_des.get_width() / 2, hauteur_fenetre / 2 - image_des.get_height() / 2))
+                                pygame.display.update()
+
+                                # Attendre un court instant avant d'afficher la prochaine image
+                                pygame.time.wait(70)
+
+                            # Afficher une image aléatoire du dé 
                             image_des = images_des[reultat_lancer_des -1]
                             image_des = pygame.transform.scale(image_des, (int(image_des.get_width() * 0.8 * taille_ajustee), int(image_des.get_height() * 0.8 * taille_ajustee)))
+
+                            # Afficher l'image du dé
                             screen.blit(image_des, (largeur_fenetre / 2 - image_des.get_width() / 2, hauteur_fenetre / 2 - image_des.get_height() / 2))
                             pygame.display.update()
+                            pygame.time.wait(1000)
 
-                            # Attendre un court instant avant d'afficher la prochaine image
-                            pygame.time.wait(70)
+                            # Supprimer l'image du dé	
+                            screen.fill((0, 0, 0))
 
-                        # Afficher une image aléatoire du dé 
-                        image_des = images_des[reultat_lancer_des -1]
-                        image_des = pygame.transform.scale(image_des, (int(image_des.get_width() * 0.8 * taille_ajustee), int(image_des.get_height() * 0.8 * taille_ajustee)))
+                            # Redimensionner l'image du dé
+                            image_des = pygame.transform.scale(image_des, (int(image_des.get_width() * 0.5), int(image_des.get_height() * 0.5)))
 
-                        # Afficher l'image du dé
-                        screen.blit(image_des, (largeur_fenetre / 2 - image_des.get_width() / 2, hauteur_fenetre / 2 - image_des.get_height() / 2))
-                        pygame.display.update()
-                        pygame.time.wait(1000)
+                            # Supprimer l'image du dé	
+                            screen.blit(plateau_image, (0, 0))
 
-                        # Supprimer l'image du dé	
-                        screen.fill((0, 0, 0))
+                            # Redimensionner l'image du dé
+                            image_des = pygame.transform.scale(image_des, (int(image_des.get_width() * 0.5), int(image_des.get_height() * 0.5)))
 
-                        # Redimensionner l'image du dé
-                        image_des = pygame.transform.scale(image_des, (int(image_des.get_width() * 0.5), int(image_des.get_height() * 0.5)))
+                            plateau.deplacer_joueur(joueur, joueur.position, joueur.position + reultat_lancer_des)
 
-                        # Supprimer l'image du dé	
-                        screen.blit(plateau_image, (0, 0))
+                        elif carte_speciale == "Echanger_Joueur":
 
-                        # Redimensionner l'image du dé
-                        image_des = pygame.transform.scale(image_des, (int(image_des.get_width() * 0.5), int(image_des.get_height() * 0.5)))
+                            # On choisi un joueur au hasard parmi les joueurs
+                            joueur_echanger = random.choice(joueurs)
 
-                        plateau.deplacer_joueur(joueur, joueur.position, joueur.position + reultat_lancer_des)
-                        # deplacement = reultat_lancer_des
-                        # joueur.position += deplacement
-
-                        
+                            # On échange la position du joueur actuel avec celle du joueur choisi
+                            plateau.echanger_joueurs(joueur, joueur_echanger)
 
 
                     # Si le joueur est sur la case 30, il a gagné
@@ -764,7 +778,7 @@ def main(reprendre=False):
 
                                         font = pygame.font.Font("./images/BlackBeard/BlackBeard.otf", largeur_fenetre // 32)
 
-                                        # Afficher le nom du joeuur au dessus des dés
+                                        # Afficher le nom du joueur au dessus des dés
                                         text = font.render(f"{joueurs[i].nom}", True, (255, 255, 255), (0, 0, 0)) 
                                         textRect = text.get_rect()
                                         textRect = (largeur_fenetre * 0.12 , hauteur_fenetre * 0.3)
