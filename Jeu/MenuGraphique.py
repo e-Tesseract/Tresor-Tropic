@@ -108,7 +108,6 @@ def main_menu():
 
         screen.blit(background_image, (0, 0))
 
-
         # Dessiner les images des boutons
         screen.blit(play_button_image, play_button_rect)
         screen.blit(save_button_image, save_button_rect)

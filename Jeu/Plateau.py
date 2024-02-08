@@ -46,7 +46,7 @@ class Plateau:
         ### Rejouer ###
 
         # Case 10
-        self.cases[9]["description"] = "Relancer"
+        self.cases[9]["description"] = "Speciale"
 
         for joueur in joueurs:
             self.cases[joueur.position - 1]["joueurs_sur_case"].append(joueur)

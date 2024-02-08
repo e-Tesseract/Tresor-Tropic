@@ -170,9 +170,10 @@ def main(reprendre=False):
 
         # Créer les joueurs
         joueurs = []
-        for i in range(nombre_de_joueurs):
-            joueur = Joueur(f"Joueur {i + 1}", i + 1)
-            joueurs.append(joueur)
+        if nombre_de_joueurs is not None:
+            for i in range(nombre_de_joueurs):
+                joueur = Joueur(f"Joueur {i + 1}", i + 1)
+                joueurs.append(joueur)
 
         for joueur in joueurs:
 
@@ -681,7 +682,7 @@ def main(reprendre=False):
 
                     
                     # Si le joueur est sur une case Relancer, un dé est relancé
-                    if plateau.cases[joueur.position - 1]["description"] == "Relancer":
+                    if plateau.cases[joueur.position - 1]["description"] == "Speciale":
 
                         # Boucle pour afficher les images des faces du dé de manière aléatoire
                         reultat_lancer_des = 0
@@ -717,8 +718,9 @@ def main(reprendre=False):
                         # Redimensionner l'image du dé
                         image_des = pygame.transform.scale(image_des, (int(image_des.get_width() * 0.5), int(image_des.get_height() * 0.5)))
 
-                        deplacement = reultat_lancer_des
-                        joueur.position += deplacement
+                        plateau.deplacer_joueur(joueur, joueur.position, joueur.position + reultat_lancer_des)
+                        # deplacement = reultat_lancer_des
+                        # joueur.position += deplacement
 
                         
 
