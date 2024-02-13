@@ -25,6 +25,7 @@ CREATE TABLE choisit (
     id_partie INTEGER,
     id_case INTEGER,
     id_joueur INTEGER,
+    dés INTEGER,
     PRIMARY KEY (id_nombre, id_partie, id_case, id_joueur),
     FOREIGN KEY (id_partie) REFERENCES partie(id_partie),
     FOREIGN KEY (id_case) REFERENCES cases(id_case)
@@ -43,17 +44,17 @@ CREATE TABLE resulta (
 
 CREATE PROCEDURE ajout_partie(joueur_nb INTEGER) AS $$
 DECLARE
-    nb_id_joueur INTEGER;
+    nb_id_partie INTEGER;
 BEGIN
-    SELECT MAX(id_joueur) INTO nb_id_joueur FROM partie;
+    SELECT MAX(id_partie) INTO nb_id_partie FROM partie;
 
-    IF nb_id_joueur IS NULL THEN
-            nb_id_joueur := 1;
+    IF nb_id_partie IS NULL THEN
+            nb_id_partie := 1;
         ELSE
-            nb_id_joueur := nb_id_joueur + 1;
+            nb_id_partie := nb_id_partie + 1;
         END IF;
 
-    INSERT INTO partie VALUES (nb_id_joueur, joueur_nb);
+    INSERT INTO partie VALUES (nb_id_partie, joueur_nb);
 END;
 $$
 LANGUAGE plpgsql;

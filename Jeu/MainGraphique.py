@@ -70,15 +70,23 @@ avatars = [pirate_image, pirate2_image, perroquet_image, aventurier_image]
 #--------------------------------------------------------- MAIN ---------------------------------------------------------#
 def main(reprendre=False):
 
-
     bdd = init_bdd()
-
     curseur = bdd.connexion.cursor()
-    curseur.execute("INSERT INTO partie VALUES (6);")
-    bdd.connexion.commit()
-
 
     tour_actuel = 1
+    for i in range(30):
+        curseur.execute('CALL ajout_cases()')
+        bdd.connexion.commit()
+
+    """curseur.execute('SELECT * FROM cases')
+    
+    # Récupération de toutes les lignes de résultats
+    resultats = curseur.fetchall()
+    
+    # Affichage des résultats
+    for row in resultats:
+        print(row)"""
+
 
     if not reprendre:
             
@@ -170,6 +178,11 @@ def main(reprendre=False):
                         nombre_de_joueurs = 3
                     elif bouton4_rect.collidepoint(event.pos):
                         nombre_de_joueurs = 4
+
+
+                    curseur.execute('CALL ajout_partie(%s)', [nombre_de_joueurs])
+                    bdd.connexion.commit()
+
 
             # Si un nombre de joueurs a été choisi, sortir de la boucle (et effacer les boutons)
             if nombre_de_joueurs is not None:

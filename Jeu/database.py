@@ -29,11 +29,15 @@ class init_bdd:
             # Créer un curseur
             self.curseur = self.connexion.cursor()
 
+            self.curseur.execute("DROP TABLE IF EXISTS partie CASCADE;")
+            self.curseur.execute("DROP TABLE IF EXISTS cases CASCADE;")
+            self.curseur.execute("DROP TABLE IF EXISTS choisit CASCADE;")
+            self.curseur.execute("DROP TABLE IF EXISTS resulta CASCADE;")
 
             # Création des tables
             self.curseur.execute("CREATE TABLE IF NOT EXISTS partie (id_partie INTEGER PRIMARY KEY, nb_joueur INTEGER);")
             self.curseur.execute("CREATE TABLE IF NOT EXISTS cases (id_case INTEGER PRIMARY KEY);")
-            self.curseur.execute("CREATE TABLE IF NOT EXISTS choisit (id_nombre INTEGER, id_partie INTEGER, id_case INTEGER, id_joueur INTEGER, PRIMARY KEY (id_nombre, id_partie, id_case, id_joueur), FOREIGN KEY (id_partie) REFERENCES partie(id_partie), FOREIGN KEY (id_case) REFERENCES cases(id_case));")
+            self.curseur.execute("CREATE TABLE IF NOT EXISTS choisit (id_nombre INTEGER, id_partie INTEGER, id_case INTEGER, id_joueur INTEGER, dés INTEGER, PRIMARY KEY (id_nombre, id_partie, id_case, id_joueur), FOREIGN KEY (id_partie) REFERENCES partie(id_partie), FOREIGN KEY (id_case) REFERENCES cases(id_case));")
             self.curseur.execute("CREATE TABLE IF NOT EXISTS resulta (id_joueur INTEGER, id_resulta INTEGER, id_partie INTEGER, resulta BOOLEAN, PRIMARY KEY (id_resulta, id_partie, id_joueur), FOREIGN KEY (id_partie) REFERENCES partie(id_partie));")
 
             ################################# partie création fonction ################################################
@@ -41,17 +45,17 @@ class init_bdd:
             sql_function_partie = """
             CREATE OR REPLACE PROCEDURE ajout_partie(joueur_nb INTEGER) AS $$
             DECLARE
-                nb_id_joueur INTEGER;
+                nb_id_partie INTEGER;
             BEGIN
-                SELECT MAX(id_joueur) INTO nb_id_joueur FROM partie;
+                SELECT MAX(id_partie) INTO nb_id_partie FROM partie;
 
-                IF nb_id_joueur IS NULL THEN
-                    nb_id_joueur := 1;
+                IF nb_id_partie IS NULL THEN
+                    nb_id_partie := 1;
                 ELSE
-                    nb_id_joueur := nb_id_joueur + 1;
+                    nb_id_partie := nb_id_partie + 1;
                 END IF;
 
-                INSERT INTO partie VALUES (nb_id_joueur, joueur_nb);
+                INSERT INTO partie VALUES (nb_id_partie, joueur_nb);
             END;
             $$
             LANGUAGE plpgsql;
