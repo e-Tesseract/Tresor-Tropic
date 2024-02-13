@@ -24,9 +24,9 @@ black = (0, 0, 0)
 
 bdd = init_bdd()
 
-curseur = bdd.connexion.cursor()
+"""curseur = bdd.connexion.cursor()
 curseur.execute("INSERT INTO partie VALUES (4);")
-bdd.connexion.commit()
+bdd.connexion.commit()"""
 
 def main_menu():
     
