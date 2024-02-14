@@ -38,6 +38,12 @@ images_des = [
     pygame.image.load("./images/Des/dice6.png")
 ]
 
+images_cartes =  [
+    pygame.image.load("./images/Cartes/Rejouer.png"),
+    pygame.image.load("./images/Cartes/Echanger.png"),
+    pygame.image.load("./images/Cartes/Reculer.png")
+]
+
 
 # Charger les images des personnages
 pirate_image = pygame.image.load('./images/Avatars/pirate.png')
@@ -561,9 +567,6 @@ def main(reprendre=False):
 
                     ancienne_position = joueur.position
 
-
-
-
                     for i in range(ancienne_position, deplacement):
 
                         # Si la case est une case monstre
@@ -684,15 +687,78 @@ def main(reprendre=False):
                     # Si le joueur est sur une case Relancer, un dé est relancé
                     if plateau.cases[joueur.position - 1]["description"] == "Speciale":
 
-                        # On choisi une carte au hasard parmi les cartes spéciales
+                        # Choisir une carte spéciale
+                        carte_speciale = None
 
+                        for i in range(15):
+                            # Afficher les cartes une par une (sachant qu'il y a 3 cartes spéciales)
+                            image_carte = images_cartes[i%3]
+                            image_carte = pygame.transform.scale(image_carte, (int(image_carte.get_width() * 0.5 * taille_ajustee), int(image_carte.get_height() * 0.5 * taille_ajustee)))
+                            screen.blit(image_carte, (largeur_fenetre / 2 - image_carte.get_width() / 2, hauteur_fenetre / 2 - image_carte.get_height() / 2))
+                            pygame.display.update()
+
+                            # Attendre un court instant avant d'afficher la prochaine image
+                            pygame.time.wait(100)
+
+                        # On choisi une carte au hasard parmi les cartes spéciales
                         if nombre_de_joueurs == 1:
                             carte_speciale = random.choice(["Relancer"])
                         else:
-                            carte_speciale = random.choice(["Relancer", "Echanger_Joueur", "Faire_Reculer"])
+                            carte_speciale = random.choice(["Echanger_Joueur"])
+
+                        # Afficher la carte correspondante
+                        if carte_speciale == "Relancer":
+                            image_carte = images_cartes[0]
+                        elif carte_speciale == "Echanger_Joueur":
+                            image_carte = images_cartes[1]
+                        else:
+                            image_carte = images_cartes[2]
+
+                        image_carte = pygame.transform.scale(image_carte, (int(image_carte.get_width() * 0.5 * taille_ajustee), int(image_carte.get_height() * 0.5 * taille_ajustee)))
+
+                        screen.blit(image_carte, (largeur_fenetre / 2 - image_carte.get_width() / 2, hauteur_fenetre / 2 - image_carte.get_height() / 2))
+                        pygame.display.update()
+                        pygame.time.wait(1000)
+                                
 
                         # Si la carte est une carte Relancer
                         if carte_speciale == "Relancer":
+
+                            screen.blit(plateau_image, (0, 0))
+
+                            # Afficher le tour du joueur
+                            font = pygame.font.Font("./images/BlackBeard/BlackBeard.otf", largeur_fenetre // 32)
+                            text = font.render(f"Tour de {joueur.nom}", True, (255, 255, 255), (0, 0, 0)) 
+                            
+                            # Afficher le personnage du joueur en petit a coté de son nom
+                            screen.blit(pygame.transform.scale(joueur.photo, (taille_personnage // 2, taille_personnage // 2)), (text.get_width() * 3.6, 0))
+
+                            # Centrer le texte en haut de la fenêtre (haut milieu)
+                            textRect = text.get_rect()
+                            textRect.center = (largeur_fenetre // 2, hauteur_fenetre // 30)
+                            screen.blit(text, textRect)
+
+                            # Réafficher les images des personnages autre que le joueur actuel (sinon ils ne sont pas affichés)
+                            for joueur_autre in joueurs:
+                                if joueur_autre != joueur:
+                                    image_joueur = pygame.transform.scale(joueur_autre.photo, (taille_personnage, taille_personnage))
+
+                                    # Calculer les coordonnées pour centrer l'image sur la case
+                                    x_case, y_case = positions_cercles[f"Case {joueur_autre.position}"]
+                                    x_image = x_case - (taille_personnage // 2)
+                                    y_image = y_case - (taille_personnage // 2)
+
+                                    # Afficher l'image centrée sur la case
+                                    screen.blit(image_joueur, (x_image, y_image))
+
+                            # Afficher l'image du personnage du joueur actuel
+                            image_joueur = pygame.transform.scale(joueur.photo, (taille_personnage, taille_personnage))
+                            x_case, y_case = positions_cercles[f"Case {joueur.position}"]
+                            x_image = x_case - (taille_personnage // 2)
+                            y_image = y_case - (taille_personnage // 2)
+                            screen.blit(image_joueur, (x_image, y_image))
+
+                            pygame.display.update()
 
                             # Boucle pour afficher les images des faces du dé de manière aléatoire
                             reultat_lancer_des = 0
@@ -731,13 +797,95 @@ def main(reprendre=False):
                             plateau.deplacer_joueur(joueur, joueur.position, joueur.position + reultat_lancer_des)
 
                         elif carte_speciale == "Echanger_Joueur":
+                            
+                            case_joueurs = []
 
-                            # On choisi un joueur au hasard parmi les joueurs
-                            joueur_echanger = random.choice(joueurs)
+                            # Ajouter les cases des joueurs dans la liste case_joueurs
+                            for joueur_echanger in joueurs:
+                                if joueur_echanger != joueur:
+                                    case_joueurs.append(joueur_echanger.position)
 
-                            # On échange la position du joueur actuel avec celle du joueur choisi
+                            screen.blit(plateau_image, (0, 0))
+
+                            # Afficher le tour du joueur
+                            font = pygame.font.Font("./images/BlackBeard/BlackBeard.otf", largeur_fenetre // 32)
+                            text = font.render(f"Tour de {joueur.nom}", True, (255, 255, 255), (0, 0, 0)) 
+                            
+                            # Afficher le personnage du joueur en petit a coté de son nom
+                            screen.blit(pygame.transform.scale(joueur.photo, (taille_personnage // 2, taille_personnage // 2)), (text.get_width() * 3.6, 0))
+
+                            # Centrer le texte en haut de la fenêtre (haut milieu)
+                            textRect = text.get_rect()
+                            textRect.center = (largeur_fenetre // 2, hauteur_fenetre // 30)
+                            screen.blit(text, textRect)
+
+                            # Redessiner les cercles des cases disponibles
+                            for case, (cercle_x, cercle_y) in positions_cercles.items():
+                                surface_cercle = pygame.Surface((largeur_fenetre * taille_cercle * 2, largeur_fenetre * taille_cercle * 2), pygame.SRCALPHA)
+                                
+                                print(case.split()[1])
+                                print(case_joueurs)
+                                # Vérifier si la case est dans cases_joueurs
+                                if int(case.split()[1]) in case_joueurs:
+
+                                    # Dessiner un cercle rouge
+                                    pygame.draw.circle(surface_cercle, (255, 0, 0, opacité_cercles), (largeur_fenetre * taille_cercle, largeur_fenetre * taille_cercle), largeur_fenetre * taille_cercle)
+
+                                    print("case_joueurs")
+                                
+                                screen.blit(surface_cercle, (cercle_x - largeur_fenetre * taille_cercle, cercle_y - largeur_fenetre * taille_cercle)) 
+
+                            # Réafficher les images des personnages autre que le joueur actuel (sinon ils ne sont pas affichés)
+                            for joueur_autre in joueurs:
+                                if joueur_autre != joueur:
+                                    image_joueur = pygame.transform.scale(joueur_autre.photo, (taille_personnage, taille_personnage))
+
+                                    # Calculer les coordonnées pour centrer l'image sur la case
+                                    x_case, y_case = positions_cercles[f"Case {joueur_autre.position}"]
+                                    x_image = x_case - (taille_personnage // 2)
+                                    y_image = y_case - (taille_personnage // 2)
+
+                                    # Afficher l'image centrée sur la case
+                                    screen.blit(image_joueur, (x_image, y_image))
+
+                            # Afficher l'image du personnage du joueur actuel
+                            image_joueur = pygame.transform.scale(joueur.photo, (taille_personnage, taille_personnage))
+                            x_case, y_case = positions_cercles[f"Case {joueur.position}"]
+                            x_image = x_case - (taille_personnage // 2)
+                            y_image = y_case - (taille_personnage // 2)
+                            screen.blit(image_joueur, (x_image, y_image))
+
+                            pygame.display.update()
+
+                            # Attendre que le joueur clique sur une case disponible
+                            case_selection = False
+                            while not case_selection:
+                                for event in pygame.event.get():                            
+                                    if event.type == pygame.QUIT:
+                                        pygame.quit()
+                                        quit()
+
+                                    elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                                        x, y = event.pos
+
+                                        # On vérifie si le clic est sur une case disponible
+                                        for case, (cercle_x, cercle_y) in positions_cercles.items():
+                                            distance = ((cercle_x - x) ** 2 + (cercle_y - y) ** 2) ** 0.5
+
+                                            # Si la distance est inférieure à un seuil (la moitié de la taille du cercle), renvoyer la case
+                                            if distance < largeur_ecran * taille_cercle * taille_ajustee:
+                                                deplacement = int(case.split()[1])
+
+                                                # Si la distance est inférieure à un seuil (la moitié de la taille du cercle), renvoyer la case
+                                                if deplacement in case_joueurs:
+                                                    # On choisi le joueur à échanger
+                                                    for joueur_echanger in joueurs:
+                                                        if joueur_echanger.position == deplacement:
+                                                            case_selection = True
+                                                            break
+
+                            # Echanger les positions des deux joueurs
                             plateau.echanger_joueurs(joueur, joueur_echanger)
-
 
                     # Si le joueur est sur la case 30, il a gagné
                     if joueur.position >= 30:
