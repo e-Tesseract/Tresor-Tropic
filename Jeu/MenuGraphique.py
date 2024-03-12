@@ -1,3 +1,17 @@
+############################################################################################
+# Développé par Hugo et Brian
+# Le programme sert à lancer le menu pour démarrer ou reprendre une partie, regarder les statistiques, jouer en multijoueurs.
+############################################################################################
+# Améliorations ou ajouts à faire :
+#   - Ouvrir une nouvelle page quand le bouton statistique est appuyé pour pouvoir afficher les statistiques.
+#   - Afficher les statistiques (regarder discord dans générale pour voir les statistiques à mettre).
+#   
+#
+# Ajouts potentiels (non obligatoires) :
+#   - création d'un document dans le programme qui explique les statistiques choisit et pourquoi.
+############################################################################################
+
+
 #-------------------------------------- IMPORTATIONS --------------------------------------#
 import pygame
 from MainGraphique import main
@@ -104,7 +118,7 @@ def main_menu():
                     pygame.quit()
                     quit()
                 elif stats_button_rect.collidepoint(event.pos):
-                    pass
+                    subprocess.Popen(["python", "StatsGraphique.py"])
                 elif multipleur_button_rect.collidepoint(event.pos):
                     pass
                  # tu met ton code ici

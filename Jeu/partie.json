@@ -1,1 +1,1 @@
-{"tour_actuel": 3, "joueurs": [{"nom": "Joueur 1", "identifiant": 1, "position": 2, "photo": "pirate_image", "nomPhoto": "pirate_image"}]}
+{"tour_actuel": 7, "joueurs": [{"nom": "Joueur 1", "identifiant": 1, "position": 1, "photo": "pirate_image", "nomPhoto": "pirate_image"}, {"nom": "Joueur 2", "identifiant": 2, "position": 2, "photo": "pirate2_image", "nomPhoto": "pirate2_image"}]}

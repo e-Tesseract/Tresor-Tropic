@@ -76,7 +76,7 @@ class Plateau:
         return joueur.position == numero_case
     
     
-    def deplacer_joueur(self, joueur: Joueur, ancienne_position, distance: int) -> None:
+    def deplacer_joueur(self, joueur: Joueur, ancienne_position, distance: int) -> str:
         """
         Déplace le joueur sur le plateau.
 
@@ -87,7 +87,7 @@ class Plateau:
         Returns:
             None
         """
-
+        echelle = "Rien"
         # Déplace le joueur sur le plateau
         self.cases[joueur.position - 1]["joueurs_sur_case"].remove(joueur)
 
@@ -99,28 +99,35 @@ class Plateau:
             if joueur.position == 5:
                 print("Le joueur est sur la case 5, il recule case 2.")
                 joueur.position = 2
+                echelle = "echelle"
             elif joueur.position == 8:
                 print("Le joueur est sur la case 8, il avance case 12.")
                 joueur.position = 12
+                echelle = "echelle"
             elif joueur.position == 14:
                 print("Le joueur est sur la case 14, il avance case 18.")
                 joueur.position = 18
+                echelle = "echelle"
             elif joueur.position == 24:
                 print("Le joueur est sur la case 24, il recule case 20.")
                 joueur.position = 20
+                echelle = "echelle"
             elif joueur.position == 26:
                 print("Le joueur est sur la case 26, il avance case 28.")
                 joueur.position = 28
+                echelle = "echelle"
             elif joueur.position == 29:
                 print("Le joueur est sur la case 29, il recule case 21.")
                 joueur.position = 21
+                echelle = "echelle"
+
         else:
             print("Déplacement invalide. Le joueur ne bouge pas.")
 
         # On ajoute le joueur à la case
         self.cases[joueur.position - 1]["joueurs_sur_case"].append(joueur)
+        return echelle
 
-        
 
     def mettre_a_jour_joueurs_sur_case(self, joueur: Joueur, numero_case: int) -> None: 
         """

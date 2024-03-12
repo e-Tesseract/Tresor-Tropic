@@ -1,9 +1,20 @@
+############################################################################################
+# développer par Hugo et Brian
+# le programme sert à joue au jeux, choisir le nombre de joueur, chosir a quoi vont ressembler les personnage
+############################################################################################
+# amélioration ou ajouter à faire:
+#   - ajouter automatique a la table resulta
+#
+#
+# ajout potenciel(non obligatoire):
+#   - (aucune pour l'instant)
+############################################################################################
+
 #-------------------------------------- IMPORTATIONS --------------------------------------#
 import pygame
 import random
 import json
 import sys
-import psycopg2
 from Plateau import Plateau
 from Joueur import Joueur
 from database import  init_bdd
@@ -70,6 +81,8 @@ avatars = [pirate_image, pirate2_image, perroquet_image, aventurier_image]
 #--------------------------------------------------------- MAIN ---------------------------------------------------------#
 def main(reprendre=False):
 
+    spécial = "rien"
+    id_partie = -1
     bdd = init_bdd()
     curseur = bdd.connexion.cursor()
 
@@ -181,6 +194,14 @@ def main(reprendre=False):
 
 
                     curseur.execute('CALL ajout_partie(%s)', [nombre_de_joueurs])
+
+                    curseur.execute('SELECT MAX(id_partie) FROM partie')
+    
+                    # Récupération de toutes les lignes de résultats
+                    resultats = curseur.fetchall()
+                    
+                    id_partie = resultats[0][0]
+                    print(id_partie)
                     bdd.connexion.commit()
 
 
@@ -672,18 +693,33 @@ def main(reprendre=False):
                                 pygame.display.update()
                                 pygame.time.wait(2000)
 
+                                resulta=False
                                 if resultat_joueur > resultat_monstre:
                                     Egalite = False
+                                    resulta=True
+                                    curseur.execute('CALL ajout_choisit(%s, %s, %s, %s, %s)', [id_partie, deplacement, joueur.identifiant, reultat_lancer_des, spécial])
+                                    curseur.execute('CALL ajout_resulta(%s, %s, %s)', [resulta, joueur.identifiant, id_partie]) 
+                                    bdd.connexion.commit()
                                     break
 
                                 elif resultat_joueur < resultat_monstre:
                                     Egalite = False  
+                                    resulta = False
                                     deplacement = case_monstre -1
+                                    curseur.execute('CALL ajout_choisit(%s, %s, %s, %s, %s)', [id_partie, deplacement, joueur.identifiant, reultat_lancer_des, spécial])    
+                                    curseur.execute('CALL ajout_resulta(%s, %s, %s)', [resulta, joueur.identifiant, id_partie])
+                                    bdd.connexion.commit()
+                            
                                     break                    
 
                     
                     # Déplacer le joueur
-                    plateau.deplacer_joueur(joueur, ancienne_position, deplacement)
+                    spécial = plateau.deplacer_joueur(joueur, ancienne_position, deplacement)
+
+                    curseur.execute('CALL ajout_choisit(%s, %s, %s, %s, %s)', [id_partie, deplacement, joueur.identifiant, reultat_lancer_des, spécial])    
+                    bdd.connexion.commit()
+
+                    #################################   #################################
 
                     
                     # Si le joueur est sur une case Relancer, un dé est relancé
@@ -856,7 +892,12 @@ def main(reprendre=False):
                                         nouvelle_position_perdant = 1
 
                                     # Déplacer le perdant sur la nouvelle position
-                                    plateau.deplacer_joueur(perdant, perdant.position, nouvelle_position_perdant)
+                                    spécial = plateau.deplacer_joueur(perdant, perdant.position, nouvelle_position_perdant)
+                                    curseur.execute('CALL ajout_choisit(%s, %s, %s, %s, %s)', [id_partie, deplacement, joueur.identifiant, reultat_lancer_des, "combat"])    
+                                    bdd.connexion.commit()
+                                    
+
+
 
                         # Mettre à jour la position des joueurs sur le plateau      
                         for joueur in joueurs:
