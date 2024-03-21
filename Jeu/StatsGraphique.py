@@ -1,3 +1,15 @@
+############################################################################################
+# développer par Brian
+# le programme sert à crée un page noir avec du texte et de montré les données contenue sur la base de donné
+############################################################################################
+# amélioration ou ajouter à faire:
+#   - 
+#
+# ajout potenciel(non obligatoire):
+#   - optimisation
+#   - commentaire à faire
+############################################################################################
+
 import pygame
 import psycopg2
 from database import init_bdd
@@ -47,7 +59,7 @@ partie = curseur.fetchone()[0]
 curseur.execute("SELECT total_deplacements_joueurs_gagnants()")
 total_gagnants = curseur.fetchone()[0]
 
-curseur.execute("SELECT total_echelles()")
+curseur.execute("SELECT count(*) FROM choisit where special='echelle'")
 echelles = curseur.fetchone()[0]
 
 curseur.execute("SELECT count_resultats()")

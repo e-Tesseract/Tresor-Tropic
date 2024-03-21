@@ -161,6 +161,7 @@ class init_bdd:
             END;
             $$
             LANGUAGE plpgsql;
+
             """
 
             total_cases_parcourues = """
@@ -240,8 +241,8 @@ class init_bdd:
             DECLARE
                 result INTEGER;
             BEGIN
-                -- Calcul du nombre d'occurrences où la valeur de la colonne "special" est 'echelles'
-                SELECT COUNT(*) INTO result FROM choisit WHERE special = 'echelles';
+                -- Calcul du nombre d'occurrences où la valeur de la colonne "special" est 'echelle'
+                SELECT COUNT(*) INTO result FROM choisit WHERE special = 'echelle';
 
                 -- Retourner le résultat
                 RETURN result;
