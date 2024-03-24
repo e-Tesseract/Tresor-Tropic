@@ -50,23 +50,26 @@ pirate_image = pygame.image.load('./images/Avatars/pirate.png')
 pirate2_image = pygame.image.load('./images/Avatars/pirate2.png')
 perroquet_image = pygame.image.load('./images/Avatars/perroquet.png')
 aventurier_image = pygame.image.load('./images/Avatars/aventurier.png')
+squelette_pirate_image = pygame.image.load('./images/Avatars/squelette_pirate.png')
 
 avatar_to_variable = {
     pirate_image: "pirate_image",
     pirate2_image: "pirate2_image",
     perroquet_image: "perroquet_image",
-    aventurier_image: "aventurier_image"
+    aventurier_image: "aventurier_image",
+    squelette_pirate_image: "squelette_pirate_image"
 }
 
 avatar_to_image = {
     "pirate_image": pirate_image,
     "pirate2_image": pirate2_image,
     "perroquet_image": perroquet_image,
-    "aventurier_image": aventurier_image
+    "aventurier_image": aventurier_image,
+    "squelette_pirate_image": squelette_pirate_image
 }
 
 # Liste des images des personnages
-avatars_noms = [pirate_image, pirate2_image, perroquet_image, aventurier_image]
+avatars_noms = [pirate_image, pirate2_image, perroquet_image, aventurier_image, squelette_pirate_image]
 
 # def pause_menu(screen):
 #     menu_popup(screen)
@@ -197,13 +200,15 @@ def main(reprendre=False):
             avatar_width = int(button_width * 0.8) 
             avatar_height = int(button_height * 2) 
 
+
             # Créer une liste des avatars redimensionnés
             avatars = [
                 pygame.transform.scale(pirate_image, (avatar_width, avatar_height)),
                 pygame.transform.scale(pirate2_image, (avatar_width, avatar_height)),
                 pygame.transform.scale(perroquet_image, (avatar_width, avatar_height)),
-                pygame.transform.scale(aventurier_image, (avatar_width, avatar_height))
-            ]
+                pygame.transform.scale(aventurier_image, (avatar_width, avatar_height)),
+                pygame.transform.scale(squelette_pirate_image, (avatar_width, avatar_height))            
+                ]
 
             # Pour chaque bouton
             for i, bouton_rect in enumerate([bouton1_rect, bouton2_rect, bouton3_rect, bouton4_rect]):
@@ -246,6 +251,20 @@ def main(reprendre=False):
                             index_avatar = (index_avatar + 1) % len(avatars)
                         else:
                             # Si le clic n'est pas sur une flèche, choisir l'avatar
+                            avatar = avatars[index_avatar]
+                            avatar_nom = avatar = avatars_noms[index_avatar]
+                            joueur.photo = avatar
+                            joueur.nomPhoto = avatar_to_variable.get(avatar_nom, "Inconnu")
+                            choix_avatar = True
+                    elif event.type == pygame.KEYDOWN:
+                        if event.key == pygame.K_LEFT:
+                            # Aller à l'avatar précédent
+                            index_avatar = (index_avatar - 1) % len(avatars)
+                        elif event.key == pygame.K_RIGHT:
+                            # Aller à l'avatar suivant
+                            index_avatar = (index_avatar + 1) % len(avatars)
+                        elif event.key == pygame.K_RETURN:
+                            # Si la touche Entrée est pressée, choisir l'avatar
                             avatar = avatars[index_avatar]
                             avatar_nom = avatar = avatars_noms[index_avatar]
                             joueur.photo = avatar
