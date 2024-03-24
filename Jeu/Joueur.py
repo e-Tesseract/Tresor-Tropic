@@ -5,7 +5,7 @@ class Joueur:
     def __init__(self, nom, identifiant) :
         self.nom = nom
         self.identifiant = identifiant
-        self.position = 9
+        self.position = 1
         self.photo = None 
         self.nomPhoto = None
 
@@ -33,6 +33,10 @@ class Joueur:
             None
         """        
         print("Nom: ", self.nom, " Position: ", self.position)
+        print("Identifiant: ", self.identifiant)
+        print("Photo: ", self.photo)
+        print("Nom de la photo: ", self.nomPhoto)
+
 
 
 

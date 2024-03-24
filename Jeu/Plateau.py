@@ -48,6 +48,9 @@ class Plateau:
         # Case 10
         self.cases[9]["description"] = "Speciale"
 
+        # Case 16
+        self.cases[15]["description"] = "Speciale"
+
         for joueur in joueurs:
             self.cases[joueur.position - 1]["joueurs_sur_case"].append(joueur)
 
