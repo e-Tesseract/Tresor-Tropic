@@ -18,8 +18,8 @@ class init_bdd:
         try:
             print("init_bdd")
             # on demande le nom et mot de passe de utilisateur
-            nom_utilisateur = "brian6" #input("Nom d'utilisateur : ")
-            mot_de_passe = "briandupuis220404" #input("Mot de passe de l'utilisateur : ")
+            nom_utilisateur = input("Nom d'utilisateur : ")
+            mot_de_passe = input("Mot de passe de l'utilisateur : ")
 
             # Établir la connexion avec la base de données
             conn = psycopg2.connect(
