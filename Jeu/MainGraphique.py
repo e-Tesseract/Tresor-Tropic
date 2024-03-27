@@ -23,7 +23,7 @@ largeur_fenetre, hauteur_fenetre = int(largeur_ecran * taille_ajustee), int(haut
 screen = pygame.display.set_mode((largeur_fenetre, hauteur_fenetre))
 
 # Charger l'image du plateau
-plateau_image = pygame.image.load('./images/Map.png')
+plateau_image = pygame.image.load('./images/Map2.png')
 
 # Redimensionner l'image du plateau pour qu'elle remplisse la fenêtre
 plateau_image = pygame.transform.scale(plateau_image, (largeur_fenetre, hauteur_fenetre))
