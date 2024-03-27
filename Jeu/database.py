@@ -17,38 +17,39 @@ class init_bdd:
     def __init__(self):
         try:
             print("init_bdd")
-            # on demande le nom et mot de passe de utilisateur
+            # on demande le nom et mot de passe de l'utilisateur
             nom_utilisateur = input("Nom d'utilisateur : ")
             mot_de_passe = input("Mot de passe de l'utilisateur : ")
 
-            # Établir la connexion avec la base de données
-            conn = psycopg2.connect(
+            # Établir la connexion avec PostgreSQL pour créer la base de données
+            conn_creation_db = psycopg2.connect(
                 host="localhost",
                 port="5432",
                 user=nom_utilisateur,
                 password=mot_de_passe
             )
 
-            # Création du curseur pour exécuter des requêtes SQL
-            cur = conn.cursor()
+            # Désactiver la transaction automatique
+            conn_creation_db.autocommit = True
 
-            # Vérifier si la base de données existe déjà
-            cur.execute(sql.SQL("SELECT 1 FROM pg_database WHERE datname = %s"), ['sql_jeux'])
-            exists = cur.fetchone()
+            # Créer un curseur pour exécuter la commande CREATE DATABASE
+            cur_creation_db = conn_creation_db.cursor()
 
-            # Si la base de données n'existe pas, la créer
+            # Créer la base de données si elle n'existe pas déjà
+            cur_creation_db.execute("SELECT 1 FROM pg_database WHERE datname = 'sql_jeux'")
+            exists = cur_creation_db.fetchone()
+
             if not exists:
-                cur.execute(sql.SQL("CREATE DATABASE {}").format(sql.Identifier('sql_jeux')))
+                cur_creation_db.execute("CREATE DATABASE sql_jeux;")
                 print("Base de données créée avec succès.")
             else:
                 print("La base de données existe déjà.")
 
-            # Fermeture du curseur et validation de la transaction
-            cur.close()
-            conn.commit()
+            # Fermer le curseur et la connexion utilisés pour la création de la base de données
+            cur_creation_db.close()
+            conn_creation_db.close()
 
-            print("connection réussit")
-            # Connexion à la base de données "sql_jeux"
+            # Établir la connexion avec la base de données nouvellement créée
             self.connexion = psycopg2.connect(
                 host="localhost",
                 database="sql_jeux",
@@ -56,7 +57,8 @@ class init_bdd:
                 user=nom_utilisateur,
                 password=mot_de_passe
             )
-            # Créer un curseur
+
+            # Créer un curseur pour exécuter des requêtes SQL
             self.curseur = self.connexion.cursor()
             # Autres opérations d'initialisation...
 
@@ -339,3 +341,4 @@ class init_bdd:
             # Fermer le curseur
             if hasattr(self, 'curseur') and self.curseur is not None:
                 self.curseur.close()
+
