@@ -1,4 +1,6 @@
 import random
+from typing import Optional
+import pygame
 
 
 class Joueur:
@@ -6,7 +8,7 @@ class Joueur:
         self.nom = nom
         self.identifiant = identifiant
         self.position = 1
-        self.photo = None 
+        self.photo :Optional[pygame.Surface] = None
         self.nomPhoto = None
 
     def lancer_de_des(self) -> int:
@@ -33,6 +35,10 @@ class Joueur:
             None
         """        
         print("Nom: ", self.nom, " Position: ", self.position)
+        print("Identifiant: ", self.identifiant)
+        print("Photo: ", self.photo)
+        print("Nom de la photo: ", self.nomPhoto)
+
 
 
 
