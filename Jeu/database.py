@@ -11,15 +11,40 @@
 ############################################################################################
 
 import psycopg2
+import os
+import json
 from psycopg2 import sql
 
 class init_bdd:
     def __init__(self):
         try:
             print("init_bdd")
-            # on demande le nom et mot de passe de l'utilisateur
-            nom_utilisateur = input("Nom d'utilisateur : ")
-            mot_de_passe = input("Mot de passe de l'utilisateur : ")
+            vide = False
+            # Vérifier si le fichier existe déjà
+            if not os.path.exists("connectionbdd.json"):
+                # Créer le fichier s'il n'existe pas
+                with open("connectionbdd.json", "w") as fichier:
+                    fichier.write("[]")  # Écrire une liste vide pour initialiser le fichier JSON
+
+            # Enregistrer les informations dans un fichier JSON
+            with open("connectionbdd.json", "r+") as fichier:
+                # Vérifier si le fichier est vide
+                if os.path.getsize("connectionbdd.json") == 0:
+                    vide = True
+                else:
+                    partie_data = json.load(fichier)
+
+                    # Extraire les données de connexion
+                    joueurs_data = partie_data["connection"][0]  # Accès au premier élément de la liste
+
+                    # Créer les objets correspondant aux données de connection
+                    nom_utilisateur = joueurs_data["nom"]
+                    mot_de_passe = joueurs_data["mot_de_passe"]
+
+            if vide==True:
+                # on demande le nom et mot de passe de l'utilisateur
+                nom_utilisateur = input("Nom d'utilisateur : ")
+                mot_de_passe = input("Mot de passe de l'utilisateur : ")
 
             # Établir la connexion avec PostgreSQL pour créer la base de données
             conn_creation_db = psycopg2.connect(
@@ -28,6 +53,32 @@ class init_bdd:
                 user=nom_utilisateur,
                 password=mot_de_passe
             )
+
+            # Enregistrer les informations dans un fichier JSON
+            with open("connectionbdd.json", "r+") as fichier:
+                # Vérifier si le fichier est vide
+                if os.path.getsize("connectionbdd.json") == 0:
+                    # Créer une liste pour stocker les informations de connexion
+                    connection = []
+
+                    # nom du compte SQL
+                    nom = nom_utilisateur
+
+                    # mot de passe du compte SQL
+                    mot_de_passe = mot_de_passe
+
+                    # ajouter les informations de connection à la liste
+                    connection.append({"nom": nom, "mot_de_passe": mot_de_passe})
+
+                    # Créer un dictionnaire avec la clé "connection" contenant la liste des données
+                    data = {"connection": connection}
+
+                    # Enregistrer les données dans le fichier JSON
+                    with open("connectionbdd.json", "w") as fichier:
+                        # Retourner au début du fichier pour écrire les données
+                        fichier.seek(0)
+                        # enregistrer le dictionnaire dans le fichier
+                        json.dump(data, fichier)
 
             # Désactiver la transaction automatique
             conn_creation_db.autocommit = True
