@@ -29,7 +29,7 @@ infoObject = pygame.display.Info()
 largeur_ecran, hauteur_ecran = infoObject.current_w, infoObject.current_h
 
 # Permettre de redimensionner la fenêtre 
-taille_ajustee =1
+taille_ajustee = 0.2
 
 # Définir la taille de la fenêtre en pourcentage de la taille de l'écran
 largeur_fenetre, hauteur_fenetre = int(largeur_ecran * taille_ajustee), int(hauteur_ecran * taille_ajustee)
@@ -275,8 +275,8 @@ def main(reprendre=False):
             avatar: pygame.Surface = pygame.Surface((0, 0))
 
             # Créer les boutons pour les flèches
-            fleche_droite = pygame.Rect(50, hauteur_ecran // 2, 50, 50)
-            fleche_gauche = pygame.Rect(largeur_ecran - 100, hauteur_ecran // 2, 50, 50)
+            fleche_droite = pygame.Rect(50, hauteur_fenetre // 2, 50, 50)
+            fleche_gauche = pygame.Rect(largeur_fenetre - 100, hauteur_fenetre // 2, 50, 50)
 
             # Initialiser l'index de l'avatar
             index_avatar = 0
@@ -329,7 +329,7 @@ def main(reprendre=False):
 
                 # Afficher l'avatar
                 avatar_rect = avatars[index_avatar].get_rect()
-                avatar_rect.center = (largeur_ecran // 2, hauteur_ecran // 2)
+                avatar_rect.center = (largeur_fenetre // 2, hauteur_fenetre // 2)
                 screen.blit(avatars[index_avatar], avatar_rect)
 
                 # Afficher les flèches
