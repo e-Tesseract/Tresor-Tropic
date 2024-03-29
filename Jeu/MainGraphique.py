@@ -29,7 +29,7 @@ infoObject = pygame.display.Info()
 largeur_ecran, hauteur_ecran = infoObject.current_w, infoObject.current_h
 
 # Permettre de redimensionner la fenêtre 
-taille_ajustee =1
+taille_ajustee =0.8
 
 # Définir la taille de la fenêtre en pourcentage de la taille de l'écran
 largeur_fenetre, hauteur_fenetre = int(largeur_ecran * taille_ajustee), int(hauteur_ecran * taille_ajustee)
@@ -358,6 +358,8 @@ def main(reprendre=False):
             joueur_obj.photo = avatar_to_image[joueur_data["nomPhoto"]]
             joueur_obj.nomPhoto = joueur_data["nomPhoto"]
             joueurs.append(joueur_obj)
+        
+        id_partie=joueur_data["id_partie"]
 
         # Créer l'objet Plateau correspondant aux données de la partie
         plateau = Plateau(joueurs=joueurs)
@@ -1479,7 +1481,7 @@ def main(reprendre=False):
                                 avatar = joueur.nomPhoto
 
                                 # ajouter les informations du joueur à la liste
-                                joueurs_data.append({"nom": nom, "identifiant": identifiant, "position": position, "photo": avatar, "nomPhoto": avatar})
+                                joueurs_data.append({"nom": nom, "identifiant": identifiant, "position": position, "photo": avatar, "nomPhoto": avatar, "id_partie": id_partie})
 
                             # enregistrer la liste des joueurs dans le fichier
                             json.dump(joueurs_data, fichier)

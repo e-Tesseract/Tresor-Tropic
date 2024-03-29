@@ -143,6 +143,7 @@ class Plateau:
         Returns:
             None
         """
+        echange="vide"
 
         # Echange les positions des joueurs
         joueur1.position, joueur2.position = joueur2.position, joueur1.position
@@ -150,6 +151,8 @@ class Plateau:
         # Met à jour les joueurs sur les cases
         self.mettre_a_jour_joueurs_sur_case(joueur1, joueur1.position)
         self.mettre_a_jour_joueurs_sur_case(joueur2, joueur2.position)
+        echange = "echange"
+        return echange
 
         
 
