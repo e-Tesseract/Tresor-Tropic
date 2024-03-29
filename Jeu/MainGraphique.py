@@ -66,13 +66,15 @@ pirate2_image = pygame.image.load('./images/Avatars/pirate2.png')
 perroquet_image = pygame.image.load('./images/Avatars/perroquet.png')
 aventurier_image = pygame.image.load('./images/Avatars/aventurier.png')
 squelette_pirate_image = pygame.image.load('./images/Avatars/squelette_pirate.png')
+crocodile_image = pygame.image.load('./images/Avatars/crocodile.png')
 
 avatar_to_variable = {
     pirate_image: "pirate_image",
     pirate2_image: "pirate2_image",
     perroquet_image: "perroquet_image",
     aventurier_image: "aventurier_image",
-    squelette_pirate_image: "squelette_pirate_image"
+    squelette_pirate_image: "squelette_pirate_image",
+    crocodile_image: "crocodile_image"
 }
 
 avatar_to_image = {
@@ -80,11 +82,12 @@ avatar_to_image = {
     "pirate2_image": pirate2_image,
     "perroquet_image": perroquet_image,
     "aventurier_image": aventurier_image,
-    "squelette_pirate_image": squelette_pirate_image
+    "squelette_pirate_image": squelette_pirate_image,
+    "crocodile_image": crocodile_image
 }
 
 # Liste des images des personnages
-avatars_noms = [pirate_image, pirate2_image, perroquet_image, aventurier_image, squelette_pirate_image]
+avatars_noms = [pirate_image, pirate2_image, perroquet_image, aventurier_image, squelette_pirate_image, crocodile_image]
 
 # def pause_menu(screen):
 #     menu_popup(screen)
@@ -253,7 +256,8 @@ def main(reprendre=False):
                 pygame.transform.scale(pirate2_image, (avatar_width, avatar_height)),
                 pygame.transform.scale(perroquet_image, (avatar_width, avatar_height)),
                 pygame.transform.scale(aventurier_image, (avatar_width, avatar_height)),
-                pygame.transform.scale(squelette_pirate_image, (avatar_width, avatar_height))            
+                pygame.transform.scale(squelette_pirate_image, (avatar_width, avatar_height)),
+                pygame.transform.scale(crocodile_image, (avatar_width, avatar_height))        
                 ]
 
             # Pour chaque bouton
