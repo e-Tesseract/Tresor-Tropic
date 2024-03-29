@@ -29,7 +29,7 @@ infoObject = pygame.display.Info()
 largeur_ecran, hauteur_ecran = infoObject.current_w, infoObject.current_h
 
 # Permettre de redimensionner la fenêtre 
-taille_ajustee =0.2
+taille_ajustee =0.8
 
 # Définir la taille de la fenêtre en pourcentage de la taille de l'écran
 largeur_fenetre, hauteur_fenetre = int(largeur_ecran * taille_ajustee), int(hauteur_ecran * taille_ajustee)
@@ -349,6 +349,8 @@ def main(reprendre=False):
 
         # Extraire les données des joueurs
         joueurs_data = partie_data["joueurs"]
+
+        nombre_de_joueurs = len(joueurs_data)
 
         # Créer les objets Joueur correspondant aux données des joueurs
         joueurs = []
@@ -1060,15 +1062,12 @@ def main(reprendre=False):
                             for case, (cercle_x, cercle_y) in positions_cercles.items():
                                 surface_cercle = pygame.Surface((largeur_fenetre * taille_cercle * 2, largeur_fenetre * taille_cercle * 2), pygame.SRCALPHA)
                                 
-                                print(case.split()[1])
-                                print(case_joueurs)
                                 # Vérifier si la case est dans cases_joueurs
                                 if int(case.split()[1]) in case_joueurs:
 
                                     # Dessiner un cercle rouge
                                     pygame.draw.circle(surface_cercle, (255, 0, 0, opacité_cercles), (largeur_fenetre * taille_cercle, largeur_fenetre * taille_cercle), largeur_fenetre * taille_cercle)
 
-                                    print("case_joueurs")
                                 
                                 screen.blit(surface_cercle, (cercle_x - largeur_fenetre * taille_cercle, cercle_y - largeur_fenetre * taille_cercle)) 
 

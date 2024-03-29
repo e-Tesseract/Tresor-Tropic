@@ -121,7 +121,6 @@ def main_menu():
                     subprocess.Popen(["python", "StatsGraphique.py"])
                 elif multipleur_button_rect.collidepoint(event.pos):
                     pass
-                 # tu met ton code ici
 
         screen.blit(background_image, (0, 0))
 
