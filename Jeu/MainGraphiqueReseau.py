@@ -1,13 +1,3 @@
-############################################################################################
-# développer par Hugo et Leo
-# le programme sert à joue au jeux en réseau.
-############################################################################################
-# amélioration ou ajouter à faire:
-#   - ajout d'un chat pour les joueurs
-#   - Finaliser le projet, réussir à lancer le jeu sans problème / gérer la connectivité entre les joueurs pendant le jeu
-#
-############################################################################################
-
 # -------------------------------------- IMPORTATIONS --------------------------------------#
 import pygame
 import random
