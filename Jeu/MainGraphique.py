@@ -1,5 +1,5 @@
 ############################################################################################
-# développer par Hugo et Brian
+# Développé par Hugo et Brian
 # le programme sert à joue au jeux, choisir le nombre de joueur, chosir a quoi vont ressembler les personnage
 ############################################################################################
 # amélioration ou ajouter à faire:

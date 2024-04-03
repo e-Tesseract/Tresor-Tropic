@@ -70,11 +70,11 @@ moyenne = curseur.fetchone()[0]
 
 # Liste des lignes de texte à afficher
 lines = [
-    ("Nombre de case totales franchises", total),
-    ("Nombre de parties joués", partie),
-    ("Record du nombre de cases minimum et max que quelqu'un a fait pour gagner", total_gagnants),
-    ("Nombre de cases échelles empruntés", echelles),
-    ("Nombre de victoire et défaite face aux monstres", resulta),
+    ("Nombre de cases totales franchises", total),
+    ("Nombre de parties jouées", partie),
+    ("Record du nombre de cases minimum et maximum qu’un joueur a fait pour gagner", total_gagnants),
+    ("Nombre de cases échelles empruntées", echelles),
+    ("Nombre de victoires et de défaites face aux monstres", resulta),
     ("Moyenne que les joueurs tirent quand ils lancent les dés", moyenne),
 ]
 

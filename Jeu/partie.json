@@ -1,1 +1,1 @@
-{"tour_actuel": 61, "joueurs": [{"nom": "Joueur 1", "identifiant": 1, "position": 21, "photo": "pirate_image", "nomPhoto": "pirate_image", "id_partie": 31}, {"nom": "Joueur 2", "identifiant": 2, "position": 27, "photo": "crocodile_image", "nomPhoto": "crocodile_image", "id_partie": 31}]}
+{"tour_actuel": 2, "joueurs": [{"nom": "Joueur 1", "identifiant": 1, "position": 4, "photo": "perroquet_image", "nomPhoto": "perroquet_image", "id_partie": 33}, {"nom": "Joueur 2", "identifiant": 2, "position": 1, "photo": "crocodile_image", "nomPhoto": "crocodile_image", "id_partie": 33}]}

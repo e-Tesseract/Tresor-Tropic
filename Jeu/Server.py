@@ -1,5 +1,5 @@
 ############################################################################################
-# développer par Léo
+# Développé par Léo
 # le programme sert a creer un serveur pour le jeu, il attend les connexions des joueurs.
 ############################################################################################
 # amélioration ou ajouter à faire:
