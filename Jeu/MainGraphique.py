@@ -1287,7 +1287,7 @@ def main(reprendre=False):
                             if joueurs[i].position == joueurs[j].position:
 
                                 # Si les deux joueurs sont sur la case 1, on ne fait rien
-                                if joueurs[i].position != 1 and joueurs[j].position != 1:    
+                                if joueurs[i].position != 1 and joueurs[j].position != 1:
                                     
                                     Egalite = True
                                     
