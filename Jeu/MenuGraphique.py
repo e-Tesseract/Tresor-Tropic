@@ -17,7 +17,6 @@ import pygame
 from MainGraphique import main
 import subprocess
 from database import init_bdd
-import socket
 #------------------------------------------------------------------------------------------#
 
 # Initialiser Pygame
@@ -38,17 +37,6 @@ white = (255, 255, 255)
 black = (0, 0, 0)
 
 bdd = init_bdd()
-
-def create_server_connection():
-    try:
-        client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        client_socket.connect(("192.168.1.2", 5555))
-        print("Connecté au serveur.")
-        return client_socket
-    except Exception as e:
-        print(f"Impossible de se connecter au serveur: {e}")
-        return None
-
 
 def main_menu():
     
