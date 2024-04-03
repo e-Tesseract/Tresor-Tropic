@@ -7,6 +7,7 @@ http://extra.univ-littoral.fr/gitlab/capon.hugo/tresor-tropic.git
 Bibliothèques nécessaires:
 - Python
 - Pygame
+- Socket
 
 Lancement Rapide:
 - Pour lancer le jeu graphique, allez dans le dossier "Jeu" et exécutez  "MenuGraphique.py"
