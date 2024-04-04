@@ -109,6 +109,7 @@ def main(reprendre=False):
 
     """curseur.execute('SELECT * FROM cases')
     
+    
     # Récupération de toutes les lignes de résultats
     resultats = curseur.fetchall()
     

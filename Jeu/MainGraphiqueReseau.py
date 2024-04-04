@@ -23,7 +23,7 @@ infoObject = pygame.display.Info()
 largeur_ecran, hauteur_ecran = infoObject.current_w, infoObject.current_h
 
 # Permettre de redimensionner la fenêtre
-taille_ajustee = 0.7
+taille_ajustee = 1
 
 # Définir la taille de la fenêtre en pourcentage de la taille de l'écran
 largeur_fenetre, hauteur_fenetre = int(largeur_ecran * taille_ajustee), int(

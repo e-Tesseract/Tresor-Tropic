@@ -25,7 +25,7 @@ class init_bdd:
             if not os.path.exists("connectionbdd.json"):
                 # Créer le fichier s'il n'existe pas
                 with open("connectionbdd.json", "w") as fichier:
-                    fichier.write("[]")  # Écrire une liste vide pour initialiser le fichier JSON
+                    fichier.write("")  # Écrire une liste vide pour initialiser le fichier JSON
 
             # Enregistrer les informations dans un fichier JSON
             with open("connectionbdd.json", "r+") as fichier:
