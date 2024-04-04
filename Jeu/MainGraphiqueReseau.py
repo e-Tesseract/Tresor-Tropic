@@ -104,11 +104,14 @@ def connect_to_server():
         return None
 
 def afficher_ecran_attente(screen):
-    # Afficher un message d'attente sur l'écran
+    beige_fonce = (210, 180, 140)
+
     font = pygame.font.Font(None, 36)
-    texte = font.render('En attente des autres joueurs...', True, (255, 255, 255))
-    screen.fill((0, 0, 0))
-    screen.blit(texte, (100, 100))
+    texte = font.render('En attente de la connexion des joueurs...', True, (0, 0, 0))
+    text_rect = texte.get_rect(center=(screen.get_width() // 2, screen.get_height() // 2))
+
+    screen.fill(beige_fonce)
+    screen.blit(texte, text_rect)
     pygame.display.flip()
     
     
