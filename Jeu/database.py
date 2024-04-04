@@ -1,5 +1,5 @@
 ############################################################################################
-# développer par brian
+# Développé par brian
 # le programme sert à crée une base de donnée postgreSQL pour un jeux vidéo
 ############################################################################################
 # amélioration ou ajouter à faire:
@@ -14,6 +14,7 @@ import psycopg2
 import os
 import json
 from psycopg2 import sql
+
 
 class init_bdd:
     def __init__(self):

@@ -1,5 +1,5 @@
 ############################################################################################
-# développer par Hugo et Brian
+# Développé par Hugo et Brian
 # le programme sert à joue au jeux, choisir le nombre de joueur, chosir a quoi vont ressembler les personnage
 ############################################################################################
 # amélioration ou ajouter à faire:
@@ -1287,7 +1287,7 @@ def main(reprendre=False):
                             if joueurs[i].position == joueurs[j].position:
 
                                 # Si les deux joueurs sont sur la case 1, on ne fait rien
-                                if joueurs[i].position != 1 and joueurs[j].position != 1:    
+                                if joueurs[i].position != 1 and joueurs[j].position != 1:
                                     
                                     Egalite = True
                                     
@@ -1377,7 +1377,7 @@ def main(reprendre=False):
                                             # Mettre à jour l'affichage
                                             pygame.display.update()
 
-                                            # Attendre un court instant (70 millisecondes) avant d'afficher la prochaine image 
+                                            # Attendre un court instant avant d'afficher la prochaine image 
                                             pygame.time.wait(70)
                                        
                                         # Afficher une image aléatoire du dé
@@ -1511,7 +1511,7 @@ def main(reprendre=False):
             # Afficher le gagnant sur fond noir
             screen.fill((0, 0, 0))
             font = pygame.font.Font("./images/BlackBeard/BlackBeard.otf", largeur_fenetre // 20)
-            text = font.render(f"{gagnants[0].nom} à TROUVÉ LE TRESOR !", True, (255, 255, 255), (0, 0, 0))
+            text = font.render(f"{gagnants[0].nom} a TROUVÉ LE TRESOR !", True, (255, 255, 255), (0, 0, 0))
             textRect = text.get_rect()
             textRect.center = (largeur_fenetre // 2, hauteur_fenetre // 2)
             screen.blit(text, textRect)

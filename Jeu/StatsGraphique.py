@@ -52,30 +52,30 @@ moyenne= 0
 total_cases_cartes = 0
 
 curseur.execute("SELECT total_cases_parcourues()")
-total = curseur.fetchone()[0]
+total = curseur.fetchone()[0] # type: ignore
 
 curseur.execute("SELECT MAX(id_partie) FROM partie;")
-partie = curseur.fetchone()[0]
+partie = curseur.fetchone()[0] # type: ignore
 
 curseur.execute("SELECT total_deplacements_joueurs_gagnants()")
-total_gagnants = curseur.fetchone()[0]
+total_gagnants = curseur.fetchone()[0] # type: ignore
 
 curseur.execute("SELECT count(*) FROM choisit where special='echelle'")
-echelles = curseur.fetchone()[0]
+echelles = curseur.fetchone()[0] # type: ignore
 
 curseur.execute("SELECT count_resultats()")
-resulta = curseur.fetchone()[0]
+resulta = curseur.fetchone()[0] # type: ignore
 
 curseur.execute("SELECT moyenne_des()")
-moyenne = curseur.fetchone()[0]
+moyenne = curseur.fetchone()[0] # type: ignore
 
 # Liste des lignes de texte à afficher
 lines = [
-    ("Nombre de case totales franchises", total),
-    ("Nombre de parties joués", partie),
-    ("Record du nombre de cases minimum et max que quelqu'un a fait pour gagner", total_gagnants),
-    ("Nombre de cases échelles empruntés", echelles),
-    ("Nombre de victoire et défaite face aux monstres", resulta),
+    ("Nombre de cases totales franchises", total),
+    ("Nombre de parties jouées", partie),
+    ("Record du nombre de cases minimum et maximum qu’un joueur a fait pour gagner", total_gagnants),
+    ("Nombre de cases échelles empruntées", echelles),
+    ("Nombre de victoires et de défaites face aux monstres", resulta),
     ("Moyenne que les joueurs tirent quand ils lancent les dés", moyenne),
 ]
 
@@ -105,7 +105,7 @@ for line in lines:
     # Centrer le rectangle de texte horizontalement
     text_rect.centerx = largeur_fenetre // 2
     # Définir la position verticale du rectangle de texte
-    text_rect.centery = y
+    text_rect.centery = y # type: ignore
     # Dessiner la surface de texte sur l'écran
     screen.blit(text_surface, text_rect)
     # Augmenter la position verticale pour la prochaine ligne de texte
