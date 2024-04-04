@@ -49,6 +49,7 @@ total_gagnants = 0
 echelles= 0
 resulta= 0
 moyenne= 0
+total_cases_cartes = 0
 
 curseur.execute("SELECT total_cases_parcourues()")
 total = curseur.fetchone()[0]
